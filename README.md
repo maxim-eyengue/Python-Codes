@@ -1,2 +1,2 @@
 # Python-Codes
-Data Science projects and various tools built using Python 🐍
+Data Science Projects and various tools built using Python 🐍
