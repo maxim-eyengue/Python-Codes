@@ -15,14 +15,14 @@ A user wants to sell their car and needs help determining at which price.
      - Regularization to address numerical stability issues
      - Deploying and using the final model the model to make predictions  
 
-### 2. **🗃️📊 Data Preparation and Exploration**
+### 2. **🗃️ Data Preparation and Exploration**
 <img src="images/EDA.png" alt="Data Preparation & Exploration" height = "337" width = "537"/>
 
    - **Standardize Data**: Ensure consistent formats for string values.
    - **Visualize Data**: Use histograms to understand the distribution of numerical features. Observing a right-skewed distribution for car prices which could affect our model, we tried using `np.log1p` for normalization.
    - **Handle Missing Values**: Identify and fill any gaps in the data.  
 
-### 3. **📊📏 Setting Up the Validation Framework**
+### 3. **📏 Setting Up the Validation Framework**
 <img src="images/val_frame.jpg" alt="Validation Framework" height = "337" width = "537"/>
 
    - **Dataset Split**: Split into **60-20-20** for **training**, **validation**, and **test** sets.
@@ -47,7 +47,7 @@ As the target variable was transformed with a logarithmic function, the function
        $$w = (X^T X)^{-1} X^T y.$$
      - This approach allows us to compute $w$ even if $X$ is not square by utilizing $X^T X$, which is invertible if $X$ has full rank.
 
-### 6. **🚀🔍 Baseline Model & Evaluation with RMSE**
+### 6. **🔍 Baseline Model & Evaluation with RMSE**
 <img src="images/rmse.jpg" alt="Model Evaluation" width="437"/>
 
    - **Baseline Model**: Select a subset of numerical features, replace missing values with 0s if any, train the model, predict car prices, and visualize the similarity between real values and predictions with histograms.
