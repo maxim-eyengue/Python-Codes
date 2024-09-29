@@ -42,11 +42,9 @@ As the target variable was transformed with a logarithmic function, the function
 
    - We aim to find the **coefficients or weights vector $w$** that fits our data: $Xw =y$.
    - **Solution Using the Gram Matrix**:
-     - $ X^T X$ forms the **Gram Matrix**, which is square and can be inverted.
+     - $X^T X$ forms the **Gram Matrix**, which is square and can be inverted.
      - The formula for the coefficients vector $w$ is given by:
-       $$
-       w = (X^T X)^{-1} X^T y.
-       $$
+       $$w = (X^T X)^{-1} X^T y.$$
      - This approach allows us to compute $w$ even if $X$ is not square by utilizing $X^T X$, which is invertible if $X$ has full rank.
 
 ### 6. **🚀🔍 Baseline Model & Evaluation with RMSE**
@@ -72,9 +70,7 @@ As the target variable was transformed with a logarithmic function, the function
 
    - The **Gram Matrix** $X^T X$ may not always be invertible, particularly when columns are linearly dependent in the matrix $X$.
    - To address this, we added a small value $\lambda$ to the diagonal of $X^T X$:
-     $$
-     w = (X^T X + \lambda I)^{-1} X^T y.
-     $$
+     $$w = (X^T X + \lambda I)^{-1} X^T y.$$
    - This **regularization parameter** helps to stabilize the inversion, but it must be carefully tuned: neither too small nor too large, to ensure better model performance.
 
 ### 10. **⚙️ Model Tuning & Final Training**
