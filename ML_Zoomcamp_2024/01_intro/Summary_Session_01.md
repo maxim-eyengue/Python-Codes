@@ -1,4 +1,4 @@
-![ML Zoomcamp Illustration](https://github.com/maxim-eyengue/Python-Codes/blob/main/ML_Zoomcamp_2024/ML_Zoomcamp.png)
+![ML Zoomcamp Illustration](https://github.com/maxim-eyengue/Python-Codes/blob/main/ML_Zoomcamp_2024/zoomcamp.jpg)
 ## 📚 Summary of First Session - Machine Learning Zoomcamp
 
 ### 1. **🚗 Introduction to Machine Learning with Cars Data**  
