@@ -56,8 +56,8 @@ It is important to note that we do not want to offer discounts to people who are
 
    - **Binary Classification**: Logistic regression estimates the probability that a customer will churn.
    - **Model Equation**:  
-     $$ g(x_i) = \frac{1}{1 + e^{-(w_0 + w^T x_i)}} $$  
-     where $g(x_i)$ gives the probability that the $i$th customer will churn.
+     $$g(x_i) = \frac{1}{1 + e^{-(w_0 + w^T x_i)}},$$ 
+     where $g(x_i)$ gives the probability that the $i^{th}$ customer will churn.
 
 ### 8. **📐 Training & Interpretation**
 <img src="images/training.png" alt="Model Training" width="437"/>
