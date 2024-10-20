@@ -33,12 +33,14 @@ especially with imbalanced data. For example, a **dummy model** that predicts on
 ### 4. **📍 Precision & Recall**
 <img src="images/prec_rec.png" alt="Precision & Recall" width="437"/>
 
-- **Precision**: Measures how many of the predicted positive cases are actually positive.  
-  Formula:  $p = \frac{TP}{TP + FP}$
+- **Precision**:
+  Measures how many of the predicted positive cases are actually positive.
+  $$p = \frac{TP}{TP + FP}$$
   
-- **Recall**: Also known as sensitivity or True Positive Rate (TPR),
+- **Recall**:
+  Also known as sensitivity or True Positive Rate (TPR),
 measures how many actual positive cases are correctly identified.  
-  Formula:  $r = \frac{TP}{TP + FN}$
+  $$r = \frac{TP}{TP + FN}$$
 
 These metrics are crucial when accuracy falls short, especially in scenarios
 where false positives or false negatives carry different costs.
@@ -47,10 +49,13 @@ where false positives or false negatives carry different costs.
 <img src="images/roc_auc.png" alt="ROC Curve & AUC" width="437"/>
 
 - **ROC Curve**: 
+
 The Receiver Operating Characteristic (ROC) originates from the Second World War, during which it was used to evaluate the strength of radio detectors. It was applied to radar signals to determine whether a plane was flying over the radar or not.
-The ROC curve evaluates **soft predictions** by plotting True Positive Rate ($TPR = \frac{TP}{TP + FN}$)
-against False Positive Rate ($FPR = \frac{FP}{FP + TN}$) to show model performance across different
+
+The ROC curve evaluates **soft predictions** by plotting True Positive Rate $\large\left(TPR = \frac{TP}{TP + FN}\right)$
+against False Positive Rate $\large\left(FPR = \frac{FP}{FP + TN}\right)$ to show model performance across different
 thresholds.
+
 Note that the $TPR$ should be maximized and the $FPR$ minimized as far as possible.
 To get the fpr, tpr and thresholds, it is possible to use: `from sklearn.metrics import roc_curve`.
 
