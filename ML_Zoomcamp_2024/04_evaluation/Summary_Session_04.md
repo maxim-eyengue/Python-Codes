@@ -74,7 +74,7 @@ or simply split the dataset using the **train - validation - test** framework.
 ---
 
 ### 💡 Key Takeaways
-<img src="images/key.jpeg" alt="Keys" width="437"/>
+<img src="images/key.jpg" alt="Keys" width="437"/>
 
 - **Metric:** a single number describing the performance of a model
 - **Accuracy:** fraction of correct answers. It is not always reliable, especially with imbalanced data.
