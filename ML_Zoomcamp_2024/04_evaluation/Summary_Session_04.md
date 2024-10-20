@@ -35,11 +35,13 @@ especially with imbalanced data. For example, a **dummy model** that predicts on
 
 - **Precision**:
   Measures how many of the predicted positive cases are actually positive.
+  
   $$p = \frac{TP}{TP + FP}$$
   
 - **Recall**:
   Also known as sensitivity or True Positive Rate (TPR),
-measures how many actual positive cases are correctly identified.  
+measures how many actual positive cases are correctly identified.
+
   $$r = \frac{TP}{TP + FN}$$
 
 These metrics are crucial when accuracy falls short, especially in scenarios
