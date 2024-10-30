@@ -349,7 +349,7 @@ To terminate the service:
 eb terminate churn-serving-env 
 ```
 
-##### 8. 🔑 **Key Takeaways**
+### 8. 🔑 **Key Takeaways**
 
 * **Model Training and Saving:** The churn prediction model was trained and saved to a pickle file using
 a Python script.
