@@ -1,6 +1,6 @@
 ####### Churn Web Service #######
 
-# necessary import
+# Necessary import
 import pickle
 from flask import Flask, request, jsonify
 
@@ -39,5 +39,5 @@ def predict():
 
 # Condition to execute code only if run as a script
 if __name__ == "__main__":
-    # Run application in debug mode and specifying the localhost
+    # Run application in debug mode, specifying the localhost
     app.run(debug = True, host = '0.0.0.0', port = 9696)
