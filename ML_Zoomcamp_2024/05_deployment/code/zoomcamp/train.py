@@ -97,7 +97,7 @@ def train(df_train, y_train, C = 1.0):
     return dv, model
 
 
-
+# Function to make soft predictions with a vectorizer and a logistic regression model
 def predict(df, dv, model):
      # Convert data to list of dictionaries
     dicts = df[categorical + numerical].to_dict(orient = 'records')
@@ -111,7 +111,7 @@ def predict(df, dv, model):
     return y_pred
 
 
-### Cross Validattion ###
+### Cross Validation ###
 print(f"Performing KFold Cross-Validation with C = {C}")
 # Kfold cross-validation
 kfold = KFold(n_splits = n_splits, shuffle = True, random_state = 1)
