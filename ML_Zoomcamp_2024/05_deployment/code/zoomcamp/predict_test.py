@@ -1,6 +1,6 @@
 ### Churn & Marketing Services Interaction ###
 
-# import necessary library
+# Necessary library
 import requests
 
 # url address for making predictions
@@ -29,7 +29,7 @@ customer = {
     "totalcharges": 24 * 29.85
 }
 
-# send a request for making predictions
+# Send a request for making predictions
 response = requests.post(url, json = customer).json()
 # Print the response
 print(response)
