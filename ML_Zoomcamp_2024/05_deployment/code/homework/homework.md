@@ -58,7 +58,7 @@ Now let's serve this model as a web service. We install Flask and gunicorn using
 
 ```python
 url = "http://localhost:9696/q4_predict"
-customer = {"job": "student", "duration": 280, "poutcome": "failure"}
+client = {"job": "student", "duration": 280, "poutcome": "failure"}
 requests.post(url, json = client).json()
 ```
 
@@ -136,7 +136,7 @@ After running it, we can score the following customer:
 
 ```python
 url = "http://localhost:9696/q6_predict"
-customer = {"job": "management", "duration": 400, "poutcome": "success"}
+client = {"job": "management", "duration": 400, "poutcome": "success"}
 requests.post(url, json = client).json()
 ```
 
