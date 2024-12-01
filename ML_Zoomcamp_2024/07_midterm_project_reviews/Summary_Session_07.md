@@ -79,4 +79,4 @@ During three weeks, we completed midterm projects for the program, and they were
     *   Model explainability is paramount in healthcare, where understanding the rationale behind a model's prediction is essential for building trust and ensuring responsible use. Tools like SHAP (SHapley Additive exPlanations) can provide insights into the model's decision-making process, bridging the gap between AI and human understanding.
 
 ---
-For more fun: [Click here to review my midterm project](https://github.com/maxim-eyengue/Heart-Disease-App)
+For more fun: [click here to review my midterm project.](https://github.com/maxim-eyengue/Heart-Disease-App)
