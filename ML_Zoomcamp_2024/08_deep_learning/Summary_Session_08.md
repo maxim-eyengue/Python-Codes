@@ -122,33 +122,84 @@ Pre-trained models are neural networks that have been trained on large datasets 
 
 ---
 
-### CNNs
+### Convolutional Neural Networks
+
+CNNs are specialized neural networks primarily designed for processing image data. They consist of various layers, including:
+
+a. **Convolutional Layers**  
+   - **Purpose:** Extract feature representations from the input image.
+   - **Mechanism:**  
+     - **Filters (or Kernels):** Small, learnable matrices that slide (convolve) over the image to calculate similarities between the filter and the image.  
+     - **Feature Maps:** Resultant outputs that indicate how the image features match the filters.
+     - **Hierarchy of Complexity:**  
+       - Lower layers learn basic patterns (e.g., edges, corners).  
+       - Upper layers learn complex patterns formed by combining simpler ones.
+   - **Learning:** Filters are not manually defined; they are learned by the network during training.
+
+b. **Dense Layers (Fully-Connected Layers)**  
+   - **Purpose:** Use the extracted feature vector to make predictions.  
+   - **Structure:**  
+     - Every input node is connected to every output node.  
+     - Mathematically represented as \( Wx \), where \( W \) is the weight matrix and \( x \) is the input vector.  
+   - **Output for Classification Tasks:**  
+     - **Binary Classification:** Uses the **sigmoid** function to compute probabilities (e.g., probability of being a T-shirt).  
+     - **Multiclass Classification:** Uses the **softmax** function, a generalized version of sigmoid.
+
+c. **Pooling Layers**  
+   - **Purpose:** Reduce the dimensionality of feature maps, minimizing the number of parameters while retaining important information.  
+   - **Example:** **MaxPooling** selects the maximum value in a region of the feature map.
+  ![Maxpooling Layer](images/Pool_Hands.png)
 
 
+#### **Workflow in CNNs**
+1. **Input Image:** Sent through convolutional layers.
+2. **Feature Extraction:** Filters generate feature maps to represent patterns in the image.
+3. **Vector Representation:** Final feature maps are flattened into a vector.
+4. **Dense Layers:** This vector is processed to make predictions:
+   - Intermediate dense layers refine internal representations.
+   - The output layer produces probabilities for each target class.
+5. **Prediction:** Probabilities are used to determine the most likely class.
+
+
+#### **Example Architecture**
+
+![LeNet 5 Architecture](images/Lenet5.png)
+
+**LeNet-5** is a classic CNN architecture for recognizing handwritten digits. It includes convolutional layers, pooling layers, and dense layers to demonstrate this workflow.
+
+---
 
 ### Transfer Learning
 
+---
 
 ### Adjusting the learning rate
     
+---
 
 ### Checkpointing
 
+---
 
 ### Adding more Layers
 
+---
 
 ### Regularization and Dropout
 
+---
 
 ### Data Augmentation
 
+---
 
 ### Training a Larger Model
 
+---
 
 ### Using the Model
 
-
+---
 
 ## **💡 Key Takeaways**
+---
