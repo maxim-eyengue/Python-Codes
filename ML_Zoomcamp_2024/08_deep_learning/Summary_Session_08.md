@@ -410,11 +410,6 @@ This comprehensive saving allows for seamless loading and further use of the mod
 ---
 
 ## **💡 Key Takeaways**
-Here's a revised and polished version of your text for clarity and professionalism:
-
----
-
-## **💡 Key Takeaways**
 
 The goal of this project was to develop a solution for categorizing clothing items using image classification. We leveraged `Keras` with pre-trained models as a foundation and fine-tuned the architecture by adding layers and optimizing their sizes. 
 
