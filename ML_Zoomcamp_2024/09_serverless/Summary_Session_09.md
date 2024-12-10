@@ -19,25 +19,24 @@ AWS Lambda is a serverless compute service by AWS that lets you run applications
 
 
 ### **Topics to cover:**
-9.2 **🔀 AWS Lambda vs. Other Deployment Approaches**  
-   - Learn about serverless architecture and its benefits over traditional methods.
+- **🔀 AWS Lambda vs. Other Deployment Approaches** :
+   Learn about serverless architecture and its benefits over traditional methods.
 
-9.3. **📦 Introduction to TensorFlow Lite**  
-   - Discover how TensorFlow Lite is optimized for lightweight, serverless environments.
+- **📦 Introduction to TensorFlow Lite** :
+   Discover how TensorFlow Lite is optimized for lightweight, serverless environments.
 
-9.4. **🔄 Model Conversion to TensorFlow Lite**  
-   - Convert the trained model from TensorFlow to TensorFlow Lite for improved compatibility and performance.
+- **🔄 Model Conversion to TensorFlow Lite** :
+   Convert the trained model from TensorFlow to TensorFlow Lite for improved compatibility and performance.
 
-9.5. **🐋 Packaging with Docker**  
-   - Containerize the TensorFlow Lite model and dependencies using Docker for seamless deployment.
+- **🐋 Packaging with Docker** :
+   Containerize the TensorFlow Lite model and dependencies using Docker for seamless deployment.
 
-9.6. **☁️ Deploying to AWS Lambda**  
-   - Step-by-step deployment of the Dockerized model to AWS Lambda.
+- **☁️ Deploying to AWS Lambda** :
+   Step-by-step deployment of the Dockerized model to AWS Lambda.
 
-9.7. **🌐 Exposing Lambda with API Gateway**  
-   - Set up an API Gateway to make the Lambda function accessible as a user-friendly web service.
-
-
+- **🌐 Exposing Lambda with API Gateway** :
+   Set up an API Gateway to make the Lambda function accessible as a user-friendly web service.
+   
 ---
 
 
