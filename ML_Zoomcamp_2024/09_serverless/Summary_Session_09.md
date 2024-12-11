@@ -101,10 +101,24 @@ AWS Lambda is an excellent solution for real-time tasks, lightweight application
 
 ## 9.3 TensorFlow Lite
 
-* Why not TensorFlow: Too big
-* Converting the model
-* Using the TF-Lite model for making predictions
+TensorFlow is a relatively large framework, with an unpacked size of approximately 1.7 GB. The size of such frameworks is an important consideration for several reasons:  
 
+- **Historical Constraints:** Previously, AWS Lambda imposed a limit of `50 MB` for package sizes. While Docker has since increased these limits to 10 GB, the size of the framework still plays a crucial role in certain scenarios.  
+- **Performance Issues with Large Images:** Large frameworks like TensorFlow result in increased storage costs, longer initialization times (e.g., for invoking a Lambda function), slower loading times, and a significantly larger RAM footprint.  
+
+### Optimizing with TensorFlow Lite  
+To address these challenges, TensorFlow Lite (TF-Lite) provides a lightweight alternative designed specifically for inference tasks (i.e., making predictions with `model.predict(X)`) and excludes training functionality. Using TF-Lite can significantly reduce model size and improve performance.  
+
+### Model Conversion to TensorFlow Lite  
+To use TensorFlow Lite, the original TensorFlow model needs to be converted into the TF-Lite format. Below, we demonstrate this process using a pre-trained model. First, download and save the model as `clothing-model.h5`:  
+
+```bash
+wget https://github.com/DataTalksClub/machine-learning-zoomcamp/releases/download/chapter7-model/xception_v4_large_08_0.894.h5 -O clothing-model.h5
+```
+
+This model can be used to make predictions, such as classifying an image of pants. We will convert the model to the TF-Lite format to optimize it for inference tasks.  
+
+---
 
 ## 9.4 Preparing the Lambda code
 
