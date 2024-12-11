@@ -122,15 +122,45 @@ wget https://github.com/DataTalksClub/machine-learning-zoomcamp/releases/downloa
 This model can be used to make predictions, such as classifying an image of pants.  
 
 📤 **Step 2: Convert the Model to TF-Lite**  
-We will convert the model to the TF-Lite format to optimize it for inference tasks.  
+We will convert the model to the TF-Lite format to optimize it for inference tasks. [see [notebook](code/zoomcamp/tensorflow_model.ipynb)] 
+
+---
+Here’s a corrected and refined version of your text: 
 
 ---
 
-## 9.4 Preparing the Lambda code
+### 9.4 Preparing the Lambda Code
 
-* Moving the code from notebook to script
-* Testing it locally
+To prepare the Lambda code, we will start by converting the inference logic written in our [notebook](code/zoomcamp/tensorflow_model.ipynb) into a Python script. This can be achieved using the following command:  
 
+```bash
+jupyter nbconvert --to script tensorflow_model.ipynb
+```
+
+After conversion, we will clean up the generated script and define a `predict()` function to handle inference. Once finalized, the script will be saved as `lambda_function.py`. The `predict()` function can then be tested in the terminal with the following code:
+
+```python
+# Import the module
+import lambda_function
+
+# Make a prediction
+lambda_function.predict('http://bit.ly/mlbookcamp-pants')
+```
+
+Next, we will extend the script by adding a handler function for Lambda. This function will serve as the entry point for processing events. The updated script can then be tested using the terminal with an example event:
+
+```python
+# Import the module
+import lambda_function
+
+# Define a sample event
+event = {'url': 'http://bit.ly/mlbookcamp-pants'}
+
+# Invoke the Lambda handler
+lambda_function.lambda_handler(event)
+```
+
+This step ensures that the script is ready for deployment as an AWS Lambda function.
 
 ## 9.5 Preparing a Docker image
 
