@@ -125,9 +125,6 @@ This model can be used to make predictions, such as classifying an image of pant
 We will convert the model to the TF-Lite format to optimize it for inference tasks. [see [notebook](code/zoomcamp/tensorflow_model.ipynb)] 
 
 ---
-Here’s a corrected and refined version of your text: 
-
----
 
 ### 9.4 Preparing the Lambda Code
 
@@ -162,8 +159,11 @@ lambda_function.lambda_handler(event)
 
 This step ensures that the script is ready for deployment as an AWS Lambda function.
 
+---
+
 ## 9.5 Preparing a Docker image
 
+We need to create a dockerfile specifying as base image, an image created by AWS.
 * Lambda base images
 * Preparing the Dockerfile
 * Using the right TF-Lite wheel
