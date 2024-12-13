@@ -106,10 +106,10 @@ TensorFlow is a relatively large framework, with an unpacked size of approximate
 - **📜 Historical Constraints:** Previously, AWS Lambda imposed a limit of `50 MB` for package sizes. While Docker has since increased these limits to 10 GB, the size of the framework still plays a crucial role in certain scenarios.  
 - **⚡ Performance Issues with Large Images:** Large frameworks like TensorFlow result in increased storage costs, longer initialization times (e.g., for invoking a Lambda function), slower loading times, and a significantly larger RAM footprint.  
 
-### Optimizing with TensorFlow Lite 🚀  
+### Optimizing with TensorFlow Lite 🚀
 To address these challenges, TensorFlow Lite (TF-Lite) provides a lightweight alternative designed specifically for inference tasks (i.e., making predictions with `model.predict(X)`) and excludes training functionality. Using TF-Lite can significantly reduce model size and improve performance.  
 
-### Model Conversion to TensorFlow Lite 🔄  
+### Model Conversion to TensorFlow Lite 🔄
 To use TensorFlow Lite, the original TensorFlow model needs to be converted into the TF-Lite format. Below, we demonstrate this process using a pre-trained model.  
 
 📥 **Step 1: Download and Save the Model**  
@@ -126,7 +126,7 @@ We will convert the model to the TF-Lite format to optimize it for inference tas
 
 ---
 
-### 9.4 Preparing the Lambda Code
+## 9.4 Preparing the Lambda Code
 
 To prepare the Lambda code, we will start by converting the inference logic written in our [notebook](code/zoomcamp/tensorflow_model.ipynb) into a Python script. This can be achieved using the following command:  
 
@@ -161,13 +161,57 @@ This step ensures that the script is ready for deployment as an AWS Lambda funct
 
 ---
 
-## 9.5 Preparing a Docker image
+## 🚢 9.5 Preparing a Docker Image  
 
-We need to create a dockerfile specifying as base image, an image created by AWS.
-* Lambda base images
-* Preparing the Dockerfile
-* Using the right TF-Lite wheel
+To deploy our model to **`AWS Lambda`**, we need to create a [Dockerfile](code/zoomcamp/Dockerfile) 📝. This Dockerfile will:  
+✅ Specify the base image (an AWS-provided image)  
+✅ Include the necessary libraries  
+✅ Package the model file and Python script  
+✅ Configure the Lambda function entry point  
 
+### 🛠️ Here's the final Dockerfile with explanatory comments:  
+```docker  
+# 📦 Use AWS Lambda's Python 3.10 runtime as the base image  
+FROM public.ecr.aws/lambda/python:3.10  
+
+# 🧰 Install required libraries  
+RUN pip install numpy==1.23.1  
+RUN pip install --no-deps https://github.com/alexeygrigorev/tflite-aws-lambda/raw/main/tflite/tflite_runtime-2.14.0-cp310-cp310-linux_x86_64.whl  
+
+# 🗂️ Copy the model and Lambda function script to the image  
+COPY clothing-model.tflite .  
+COPY lambda_function.py .  
+
+# 🚀 Specify the Lambda function entry point  
+CMD [ "lambda_function.lambda_handler" ]  
+```  
+
+### 🏗️ Building and Running the Docker Image  
+
+1. **🔨 Build the Docker image**:  
+   ```bash  
+   docker build -t clothing-model .  
+   ```  
+
+2. **🚀 Run the Docker image locally**:  
+   ```bash  
+   docker run -it --rm -p 8080:8080 clothing-model:latest  
+   ```  
+
+   🎉 This will start the container and expose it on **port 8080** for testing.  
+
+### 🧪 Testing the Lambda Function  
+
+Create a [test script](code/zoomcamp/test.py) 🖥️ to verify that the Lambda function works as expected.  
+
+### 🔑 Important Notes  
+
+- 🛡️ The `tflite` library installed in the Dockerfile **must match** the environment in which it will run, specifically `Amazon Linux`. This ensures that the required `GLIBC_2.27` dependency is available.  
+- 📥 To achieve this, the `tflite` library is precompiled in the target environment. By pointing to the precompiled `.whl` file during the build process, the library is installed correctly. For more details, refer to [this compilation guide](https://github.com/alexeygrigorev/tflite-aws-lambda/).  
+
+🎯 By following these steps, you can successfully package and deploy your Lambda function using Docker.  
+
+--- 
 
 ## 9.6 Creating the lambda function
 

@@ -46,9 +46,11 @@ def predict(url):
     interpreter.invoke()
     # Fetch predictions
     preds = interpreter.get_tensor(output_index)
+    # Get float predictions as usual python list (json serializable)
+    float_predictions = preds[0].tolist()
 
     # return classes and predicted probabilities 
-    return dict(zip(classes, preds[0]))
+    return dict(zip(classes, float_predictions))
 
 # Lambda function handler
 def lambda_handler(event, context = None):
