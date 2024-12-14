@@ -213,14 +213,104 @@ Create a [test script](code/zoomcamp/test.py) 🖥️ to verify that the Lambda 
 
 --- 
 
-## 9.6 Creating the lambda function
+## 9.6 Creating the lambda function 🚀
 
-* Publishing the image to AWS ECR
-* Creating the function
-* Configuring it
-* Testing the function from the AWS Console
-* Pricing
+We’ve previously explored how to create and deploy a Lambda function `from scratch` directly on AWS. Now, let's deploy the Docker image we recently built to Lambda. Here's how to proceed step-by-step:
 
+### **Step 1: Access Lambda and Choose the Container Image Option 🖥️**
+In the **AWS Management Console**, click on `Lambda` and create a function. Choose the `Container image` option. To proceed, you'll need to publish the Docker image to **Amazon Elastic Container Registry (ECR)** to obtain the `Docker container image URL`.
+
+### **Step 2: Publish Your Docker Image to Amazon ECR 🐳**
+
+1. **Create a Repository**:
+   - Navigate to **Amazon ECR** and create a repository to publish images.
+   - Alternatively, use the AWS CLI:
+     ```bash
+     aws ecr create-repository --repository-name clothing-tflite-images
+     ```
+   - Copy the `repositoryUri` after creating the repository.
+
+2. **Install and Configure AWS CLI**:
+   - Install the AWS CLI:
+     ```bash
+     pip install awscli
+     ```
+   - If running it for the first time, configure it:
+     ```bash
+     aws configure
+     ```
+     You'll be prompted to enter:
+     - Your **AWS Access Key ID**.
+     - Your **AWS Secret Access Key**.
+     - The **Default region name** assigned to you.
+     - The **Default output format** (JSON, text, or table).
+
+3. **Log In to Your ECR Repository 🔐**:
+   - Use the command:
+     ```bash
+     aws ecr get-login --no-include-email | sed 's/[0-9a-zA-Z=]\{20,\}/PASSWORD/g'
+     ```
+     - **`--no-include-email`**: Avoids outputting the email.
+     - **`sed` utility**: Replaces sensitive data (e.g., your password) with `PASSWORD` for safety. 
+
+   - Execute the login command:
+     ```bash
+     $(aws ecr get-login --no-include-email)
+     ```
+     the `$` sign helps to execute what ever the command in brackets outputs.
+
+4. **Tag and Push Your Docker Image**:
+   - Define the remote URI, using a `TAG` for our image, and the copied `repositoryUri`, to identify account, region, registry, and registry_uri (`PREFIX`):
+     ```bash
+     ACCOUNT=************
+     REGION=**-****-*
+     REGISTRY=clothing-tflite-images
+     PREFIX=${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${REGISTRY}
+     TAG=clothing-model-xception-v4-001
+
+     # URI for the image we will push to ECR
+     REMOTE_URI=${PREFIX}:${TAG}
+     ```
+   - Verify the URI:
+     ```bash
+     echo ${REMOTE_URI}
+     ```
+   - Tag the Docker image:
+     ```bash
+     docker tag clothing-model:latest ${REMOTE_URI}
+     ```
+   - Push the image to ECR:
+     ```bash
+     docker push ${REMOTE_URI}
+     ```
+
+5. **Verify on Amazon ECR ✅**:
+   - Check that the image has been successfully pushed.
+
+### **Step 3: Create a Lambda Function Using the Container Image ⚙️**
+
+1. **Set Up the Function**:
+   - Go back to **AWS Lambda** and create a function.
+   - Name it: `clothing-classification`.
+   - Provide the container image URI (`REMOTE_URI`).
+   - Alternatively, browse and select the image from your repository.
+
+2. **Adjust Configuration Settings 🛠️**:
+   - Increase the timeout in **General Configuration** > **Configuration Panel**:
+     - Set the timeout to **30 seconds** (default is 3 seconds).
+   - Increase the memory allocation to **1GB**.
+   - Save your changes and wait a moment.
+
+3. **Test Your Lambda Function 🧪**:
+   - Use the image url link in your [test file](code/zoomcamp/test.py) to create a test event.
+   - Note: The function will improve with repeated runs.
+
+### **Important Notes 📌**
+
+- **Pricing**: Check this [link](https://aws.amazon.com/lambda/pricing/) for pricing details. Specify your region and memory usage.
+- **Optimization**: There’s a relationship between memory allocation and speed. Experiment to find the best configuration for your needs.
+
+---
 
 ## 9.7 API Gateway: exposing the lambda function
 
