@@ -213,7 +213,7 @@ Create a [test script](code/zoomcamp/test.py) 🖥️ to verify that the Lambda 
 
 --- 
 
-## 9.6 Creating the lambda function 🚀
+## 9.6 Creating the Lambda function 🚀
 
 We’ve previously explored how to create and deploy a Lambda function `from scratch` directly on AWS. Now, let's deploy the Docker image we recently built to Lambda. Here's how to proceed step-by-step:
 
@@ -312,30 +312,66 @@ In the **AWS Management Console**, click on `Lambda` and create a function. Choo
 
 ---
 
-## 9.7 API Gateway: exposing the lambda function
+## 9.7 API Gateway: Exposing the Lambda Function 🚀  
 
-* Creating and configuring the gateway
+We want to expose a Lambda function as a web service. To achieve this, we'll use **API Gateway**—an AWS service that allows us to expose various AWS services as web services, including AWS Lambda.  
+
+1. **Search and Create API**  
+   - On AWS, search for `API Gateway` and click on **Create API**.  
+   - Select the **Build** button for **REST API** to have complete control over requests, responses, and API management capabilities.  
+   - Note: This works with `Lambda`, `HTTP`, and `AWS Services`.  
+
+2. **Set Up the API**  
+   - Enter the name of your API and a description, then click **Create API** again.  
+   - Under **Actions**, we need to create a **resource**.  
+     - In REST APIs, resources are typically nouns (e.g., users, items).  
+     - Here, we’ll name it `predict` for consistency with previous sessions.  
+   - Click on **Create Resource**.  
+
+3. **Create a Method for the Resource**  
+   - Using the **Actions** button again, create a method to invoke the endpoint.  
+   - Choose `POST` as the request type since we’re sending data to the service.  
+   - For the **Integration type**, select `Lambda Function` and enter the name of your Lambda function (e.g., `clothing-classification`).  
+   - Click **Save** and **Add Permission** to allow API Gateway to invoke the function.  
+
+4. **Test the API**  
+   - Click the **Test** link, add a sample request (e.g., `{'url': 'http://bit.ly/mlbookcamp-pants'}`), and run the test to get a response.  
+   - The more you execute, the faster the response becomes. 🏃‍♂️💨  
+
+5. **Deploy the API**  
+   - Using the **Actions** button, select **Deploy API** to expose the function.  
+   - Create a new deployment stage by providing a name and optional description.  
+   - After deployment, you’ll get a URL that you can use to test your API.  
+
+6. **Test with a Script**  
+   - Update your [test script](code/zoomcamp/test.py) by replacing the previous local address with the new URL (e.g., `<obtained URL>/predict`).  
+   - Test it in your terminal with: `python test.py`. 🧪✨  
 
 
-## 9.8 Summary 
-
-* AWS Lambda is way of deploying models without having to worry about servers
-* Tensorflow Lite is a lightweight alternative to Tensorflow that only focuses on inference
-* To deploy your code, package it in a Docker container
-* Expose the lambda function via API Gateway
-
-
-## 9.9 Explore more
-
-* Try similar serverless services from Google Cloud and Microsoft Azure
-* Deploy cats vs dogs and other Keras models with AWS Lambda
-* AWS Lambda is also good for other libraries, not just Tensorflow. You can deploy Scikit-Learn and XGBoost models with it as well.
+### ⚠️ Important  
+Be cautious not to expose your service to the entire world! 🔒  
 
 ---
 
-# 🎯 **Key Takeaways**
-This session demonstrates how to:  
-✅ Build a scalable, cost-effective, and lightweight deployment pipeline.  
-✅ Leverage serverless solutions to optimize performance and simplify infrastructure management.  
-✅ Package and deploy machine learning models effectively with modern tools like Docker, TensorFlow Lite, and AWS Lambda.
+# 🎯 **Key Takeaways**  
+To create efficient, cost-effective, and scalable ML deployments! 
+
+### 🚀 **AWS Lambda**  
+- AWS Lambda enables deploying models without managing servers, allowing you to focus solely on writing the Lambda function.  
+- Ideal for low-volume requests as you pay only when requests are made.  
+- Use serverless solutions to improve performance and simplify infrastructure management.  
+- 🔗 Expose Lambda functions via **API Gateway** for seamless integration.  
+
+### 🧩 **TensorFlow Lite**  
+- TensorFlow Lite is a lightweight alternative to TensorFlow, designed specifically for inference tasks.  
+- Use it to build scalable, cost-effective, and lightweight deployment pipelines for ML models.  
+
+### 📦 **Docker for Deployment**  
+- Package your code in a Docker container, test it locally, and deploy it to Lambda for reliable performance.  
+- Avoid surprises by validating your containerized application beforehand.  
+- Take advantage of modern tools like **Docker**, **TensorFlow Lite**, and **AWS Lambda** to package and deploy ML models efficiently.  
+
+### 🔍 **Additional Insights**  
+- Explore similar serverless services from **Google Cloud** and **Microsoft Azure**.  
+- AWS Lambda supports various ML libraries like **Scikit-Learn** and **XGBoost**, expanding its versatility.   
 ---
