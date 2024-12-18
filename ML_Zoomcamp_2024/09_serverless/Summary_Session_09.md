@@ -79,7 +79,7 @@ AWS Lambda is a **serverless computing service** that lets you execute code with
 
 ### **Advantages of AWS Lambda ✅**
 - **Serverless Architecture 🖥️:** No need to provision or manage servers.  
-- **Cost-Effective 💰:** Pay only for requests and compute time—idle time is free!  
+- **Cost-Effective 💰:** Pay only for requests and compute time: idle (waiting) time is free!  
 - **Automatic Scaling 📈:** Adjusts automatically based on request volume.  
 - **Ease of Use 🎯:** Focus on coding; AWS handles infrastructure.
 
