@@ -2,7 +2,7 @@
 ---
 
 
-## 📚 Week 6 Summary - Machine Learning Zoomcamp
+## 📚 Session 6 Summary - Machine Learning Zoomcamp
 ### 1.  **🗺️ Project Overview: Credit Risk Scoring** 
 This week's project focuses on building a model to predict the risk of a customer defaulting on a loan.
 The model will use information about the client, such as salary, income, and debt, to determine the
