@@ -4,9 +4,9 @@
 
 # 📚 **Session 10 Summary - Machine Learning Zoomcamp**
 
-# 🚀 **Kubernetes and Tensorflow Serving**
+## 10.1 🚀 **Kubernetes and Tensorflow Serving**
 
-In this session, we're continuing the same scenario as last one: building an **image classifier** to help users categorize clothes 🧥👕👗.  
+In this session, we will serve an **image classifier** to help users categorize clothes 🧥👕👗 as in the last session.  
 
 ### **Tools and Process**  
 1️⃣ We'll use **TensorFlow Serving**, a specialized tool from the TensorFlow ecosystem, built just for **serving machine learning models**. 🚀  
@@ -45,11 +45,60 @@ With Kubernetes, we can independently scale these components for maximum efficie
 
 This example setup ensures a smooth user experience while handling different workloads seamlessly 💡.  
 
-
 ---
 
-##
+## 10.2 Tensorflow Serving
 
+It is the tool from tensorflow that can be used for seving models. For this to work we need to convert the keras model we have to special format: sage model.
+
+* The saved_model format
+* Running TF-Serving locally with Docker
+* Invoking the model from Jupyter
+
+## 10.3 Creating a pre-processing service
+
+* Converting the notebook to a Python script
+* Wrapping the script into a Flask app
+* Creating the virtual env with Pipenv
+* Getting rid of the tensorflow dependency
+
+## 10.4 Running everything locally with Docker-compose
+
+* Preparing the images 
+* Installing docker-compose 
+* Running the service 
+* Testing the service
+
+## 10.5 Introduction to Kubernetes
+
+* The anatomy of a Kubernetes cluster
+
+## 10.6 Deploying a simple service to Kubernetes
+
+* Create a simple ping application in Flask
+* Installing kubectl
+* Setting up a local Kubernetes cluster with Kind
+* Creating a deployment
+* Creating a service 
+
+## 10.7 Deploying TensorFlow models to Kubernetes
+
+* Deploying the TF-Serving model
+* Deploying the Gateway
+* Testing the service
+
+## 10.8 Deploying to EKS
+
+* Creating a EKS cluster on AWS
+* Publishing the image to ECR
+
+## 10.9 Summary
+
+* TF-Serving is a system for deploying TensorFlow models
+* When using TF-Serving, we need a component for pre-processing 
+* Kubernetes is a container orchestration platform
+* To deploy something on Kubernetes, we need to specify a deployment and a service
+* You can use Docker compose and Kind for local experiments
 
 
 
