@@ -49,11 +49,22 @@ This example setup ensures a smooth user experience while handling different wor
 
 ## 10.2 Tensorflow Serving
 
-It is the tool from tensorflow that can be used for seving models. For this to work we need to convert the keras model we have to special format: sage model.
+It is the tool from tensorflow that can be used for serving models. For this to work we need to convert the
+keras model that we have trained previously, to special format: saved_model. We will load th
+
+
+
+
 
 * The saved_model format
 * Running TF-Serving locally with Docker
 * Invoking the model from Jupyter
+
+
+
+
+
+---
 
 ## 10.3 Creating a pre-processing service
 
