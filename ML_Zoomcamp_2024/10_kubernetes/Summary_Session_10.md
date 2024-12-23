@@ -49,24 +49,51 @@ This example setup ensures a smooth user experience while handling different wor
 
 ## 10.2 Tensorflow Serving
 
-It is the tool from tensorflow that can be used for serving models. For this to work we need to convert the
-keras model that we have trained previously, to special format: saved_model. We will load th
+## 10.2 TensorFlow Serving 🚀
 
+TensorFlow Serving is a tool provided by TensorFlow for serving machine learning models in production environments. To use TensorFlow Serving, the Keras model trained earlier needs to be converted into a specific format called `saved_model`.
 
+### Steps to Serve the Model:
+1. **Model Conversion:**
+   Convert the Keras model to the `saved_model` format by running the appropriate export command or using Keras' `model.save()` function with the `saved_model` format. 🛠️
+   
+2. **Inspect the Model:**
+   After conversion, inspect the saved model to gather input and output information using the following command:
+   ```bash
+   !saved_model_cli show --dir clothing-model --all
+   ```
+   This command displays details such as input and output tensor names, which are crucial for running the model. 🔍
 
+3. **Run the Model with Docker:**
+   Use Docker to run the model by executing the following command:
+   ```docker
+   docker run -it --rm \
+      -p 8500:8500 \  # Port mapping 🌐
+      -v "$(pwd)/clothing-model:/models/clothing-model/1" \  # Volume mounting (maps the model directory) 📂
+      -e MODEL_NAME="clothing-model" \  # Set the model name as an environment variable 🧩
+      tensorflow/serving:2.7.0  # TensorFlow Serving Docker image 🐳
+   ```
+   - **`-p 8500:8500`**: Maps port 8500 on the host to port 8500 in the container, allowing external access.
+   - **`-v`**: Mounts the local `clothing-model` directory into the container's `/models/clothing-model/1` path.
+   - **`-e MODEL_NAME`**: Specifies the model name, allowing TensorFlow Serving to recognize and load it.
 
+4. **Notebook Integration:**
+   After launching the Docker container, create a [notebook](code/zoomcamp/tf_serving.ipynb) to connect to TensorFlow Serving and make predictions. 📓
 
-* The saved_model format
-* Running TF-Serving locally with Docker
-* Invoking the model from Jupyter
-
-
-
-
+### Notes:
+- gRPC will be used to establish an insecure channel for communication. ⚡
+- When components are deployed in Kubernetes, TensorFlow Serving will not be accessible externally by default, making insecure channels acceptable for internal communication. 🛡️
 
 ---
 
 ## 10.3 Creating a pre-processing service
+We will turn the jupyter noteboook created into a flask application.
+
+
+
+
+
+
 
 * Converting the notebook to a Python script
 * Wrapping the script into a Flask app
@@ -100,8 +127,8 @@ keras model that we have trained previously, to special format: saved_model. We 
 
 ## 10.8 Deploying to EKS
 
-* Creating a EKS cluster on AWS
 * Publishing the image to ECR
+x'][8uuozg a EKS cluster on AWS
 
 ## 10.9 Summary
 
