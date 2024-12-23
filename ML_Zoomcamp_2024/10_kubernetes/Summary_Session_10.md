@@ -84,25 +84,34 @@ TensorFlow Serving is a tool provided by TensorFlow for serving machine learning
 
 ---
 
-## 10.3 Creating a pre-processing service
-We will turn the jupyter noteboook created into a flask application.
+## 10.3 🚀 Creating a Pre-processing Service  
+We'll convert the Jupyter [notebook](code/zoomcamp/tf_serving.ipynb) into a Flask application using the command:  
+```bash
+jupyter nbconvert --to script
+```  
+Next, we'll rename the generated script as [gateway.py](code/zoomcamp/gateway.py). 🛠️ Afterward, we'll clean up the script and transform it into a Flask application.  
 
-docker run -it --rm \
-   -p 8500:8500 \  
-   -v "$(pwd)/clothing-model:/models/clothing-model/1" \  
-   -e MODEL_NAME="clothing-model" \ 
-   tensorflow/serving:2.7.0 
+✨ To manage dependencies, we can use `pipenv` to set up an isolated environment with the necessary libraries.  
 
+⚡ To avoid including the full TensorFlow package, there's a lighter-weight alternative called `tensorflow-cpu`, which can handle the transformation of our data into protobuf format. However, this version is still quite large (~443 MB).  
 
+💡 A more lightweight option is `tensorflow-protobuf`, a specialized version that includes only the required protobuf files (compiled), allowing us to convert NumPy arrays to protobuf format.  
 
+📦 To install it, use the following command:  
+```bash
+pipenv install tensorflow-protobuf==2.7.0
+```  
 
-
-* Converting the notebook to a Python script
-* Wrapping the script into a Flask app
-* Creating the virtual env with Pipenv
-* Getting rid of the tensorflow dependency
+---
 
 ## 10.4 Running everything locally with Docker-compose
+We will use docker-compose to run together the gateway service and the tensorflow-serving model, locally.
+First we need to prepare the docker images for the gateway and for the tensorflow-serving model.
+And then we will build them. For the model, we will use with the command:
+```bash
+ docker build -t zoomcamp-10-model:xception-v4-001 -f image-model.dockerfile . # for the model
+```
+
 
 * Preparing the images 
 * Installing docker-compose 
