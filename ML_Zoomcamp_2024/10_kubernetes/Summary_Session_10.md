@@ -47,8 +47,6 @@ This example setup ensures a smooth user experience while handling different wor
 
 ---
 
-## 10.2 Tensorflow Serving
-
 ## 10.2 TensorFlow Serving 🚀
 
 TensorFlow Serving is a tool provided by TensorFlow for serving machine learning models in production environments. To use TensorFlow Serving, the Keras model trained earlier needs to be converted into a specific format called `saved_model`.
@@ -89,7 +87,11 @@ TensorFlow Serving is a tool provided by TensorFlow for serving machine learning
 ## 10.3 Creating a pre-processing service
 We will turn the jupyter noteboook created into a flask application.
 
-
+docker run -it --rm \
+   -p 8500:8500 \  
+   -v "$(pwd)/clothing-model:/models/clothing-model/1" \  
+   -e MODEL_NAME="clothing-model" \ 
+   tensorflow/serving:2.7.0 
 
 
 
