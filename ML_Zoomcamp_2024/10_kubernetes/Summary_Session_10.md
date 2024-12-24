@@ -64,7 +64,7 @@ TensorFlow Serving is a tool provided by TensorFlow for serving machine learning
 
 3. **Run the Model with Docker:**
    Use Docker to run the model by executing the following command:
-   ```docker
+   ```bash
    docker run -it --rm \
       -p 8500:8500 \  # Port mapping 🌐
       -v "$(pwd)/clothing-model:/models/clothing-model/1" \  # Volume mounting (maps the model directory) 📂
@@ -111,9 +111,27 @@ And then we will build them. For the model, we will use with the command:
 ```bash
  docker build -t zoomcamp-10-model:xception-v4-001 -f image-model.dockerfile . # for the model
 ```
+To run this new docker image we will then run the commnand:
+```bash
+ docker run -it --rm \
+    -p 8500:8500 \ 
+    zoomcamp-10-model:xception-v4-001 
+```
+Making some changes to the [gateway script](code/zoomcamp/gateway.py) can allow us to test the model docker image quickly. We can then run it with `pipenv run python gateway.py`.
+We will also create an image for out gateway with a [dockerfile](code/zoomcamp/image-gateway.dockerfile):
+```bash
+ docker build -t zoomcamp-10-gateway:001 -f image-gateway.dockerfile . # for the gateway
+```
+We can then run it with:
+```bash
+ docker run -it --rm \
+    -p 9696:9696 \ 
+    zoomcamp-10-gateway:001
+```
+As both of them are running, we will try testing them using the [test script](code/zoomcamp/test.py). We will get an error as the gateway won't be able to reach the tensorflow serving. As the two docker images are running seperately on different ports, [test script](code/zoomcamp/test.py) try sending request to the tf-serving model via the gaeway when these two are not connected. That's why it fails. We need to find a way to link those two services available in those two containers. For that, we should put them together in one network so they can communicate together. A nice way of doing that is by using `docker-compose` that helps to 
+run multiple docker containers and link related response to each other, so all of them will run in a singke network, and be able to talk to each other if needed. To use it, we need to install it. As we are working with `Docker Desktop`, `docker-compose` is already installed. However, to install you can follow this [link](https://docs.docker.com/compose/install/). Note that to add a comman to your path directory, you neeed to open the .bash file: `nano .bashrc` and add the command at the end of it (e.g: `export PATH="$(HOME)/bin:${PATH}"`), save the file and exit. We now need to create a [docker-compose file](code/zoomcamp/docker-compose.yaml).
 
 
-* Preparing the images 
 * Installing docker-compose 
 * Running the service 
 * Testing the service
