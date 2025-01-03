@@ -104,43 +104,139 @@ pipenv install tensorflow-protobuf==2.7.0
 
 ---
 
-## 10.4 Running everything locally with Docker-compose
-We will use docker-compose to run together the gateway service and the tensorflow-serving model, locally.
-First we need to prepare the docker images for the gateway and for the tensorflow-serving model.
-And then we will build them. For the model, we will use with the command:
+## 10.4 Running Everything Locally with Docker-Compose 🚀
+
+We will use Docker Compose to run the gateway service and the TensorFlow Serving model together, locally. 
+
+### 🛠️ Preparing Docker Images
+First, we need to prepare and build the Docker images for both the gateway and the TensorFlow Serving model. 
+
+For the model, we will build the Docker image with the following command:
 ```bash
- docker build -t zoomcamp-10-model:xception-v4-001 -f image-model.dockerfile . # for the model
+ docker build -t zoomcamp-10-model:xception-v4-001 -f image-model.dockerfile .
 ```
-To run this new docker image we will then run the commnand:
+To run the model Docker image, execute:
 ```bash
  docker run -it --rm \
     -p 8500:8500 \ 
     zoomcamp-10-model:xception-v4-001 
 ```
-Making some changes to the [gateway script](code/zoomcamp/gateway.py) can allow us to test the model docker image quickly. We can then run it with `pipenv run python gateway.py`.
-We will also create an image for out gateway with a [dockerfile](code/zoomcamp/image-gateway.dockerfile):
+To quickly test the model Docker image, we can modify the [gateway script](code/zoomcamp/gateway.py) and run it with:
 ```bash
- docker build -t zoomcamp-10-gateway:001 -f image-gateway.dockerfile . # for the gateway
+pipenv run python gateway.py
 ```
-We can then run it with:
+
+Next, we create a Docker image for the gateway using the corresponding [Dockerfile](code/zoomcamp/image-gateway.dockerfile):
+```bash
+ docker build -t zoomcamp-10-gateway:001 -f image-gateway.dockerfile .
+```
+Run the gateway image with:
 ```bash
  docker run -it --rm \
     -p 9696:9696 \ 
     zoomcamp-10-gateway:001
 ```
-As both of them are running, we will try testing them using the [test script](code/zoomcamp/test.py). We will get an error as the gateway won't be able to reach the tensorflow serving. As the two docker images are running seperately on different ports, [test script](code/zoomcamp/test.py) try sending request to the tf-serving model via the gateway when these two are not connected. That's why it fails. We need to find a way to link those two services available in those two containers. For that, we should put them together in one network so they can communicate together. A nice way of doing that is by using `docker-compose` that helps to 
-run multiple docker containers and link related response to each other, so all of them will run in a singke network, and be able to talk to each other if needed. To use it, we need to install it. As we are working with `Docker Desktop`, `docker-compose` is already installed. However, to install you can follow this [link](https://docs.docker.com/compose/install/). Note that to add a comman to your path directory, you neeed to open the .bash file: `nano .bashrc` and add the command at the end of it (e.g: `export PATH="$(HOME)/bin:${PATH}"`), save the file and exit. We now need to create a [docker-compose file](code/zoomcamp/docker-compose.yaml).
 
+### 🔗 Linking Containers with Docker-Compose
+When both services are running, we can test them using the [test script](code/zoomcamp/test.py). However, an error will occur because the gateway cannot reach the TensorFlow Serving model. This happens because the two Docker containers run separately on different ports, and the test script attempts to send requests to the TensorFlow model via the gateway without them being linked.
 
-* Installing docker-compose 
-* Running the service 
-* Testing the service
+To resolve this, we need to link the two services by placing them in the same network. This allows them to communicate with each other. A convenient way to achieve this is by using Docker Compose, which runs multiple Docker containers and links them within a single network.
+
+### 📥 Installing Docker Compose
+If you are using Docker Desktop, Docker Compose is already installed. Otherwise, follow the installation guide [here](https://docs.docker.com/compose/install/). To ensure the `docker-compose` command is available in your terminal, add it to your PATH by editing the `.bashrc` file:
+```bash
+nano ~/.bashrc
+```
+Add the following line at the end of the file (adjust `/bin` to the folder where Docker Compose is installed):
+```bash
+export PATH="$(HOME)/bin:${PATH}"
+```
+Save and exit.
+
+### 📝 Creating the Docker-Compose File
+We need to create a [docker-compose.yaml file](code/zoomcamp/docker-compose.yaml) to describe the containers we want to run.
+
+The Flask app in our gateway component is configured to access the model at localhost `8500`. This results in the app trying to find the model within the gateway container, rather than the TensorFlow Serving container. To fix this, we will make the host configurable by importing `os` in the gateway script to access environment variables and set the model host using:
+```python
+os.getenv('TF_SERVING_HOST')
+```
+
+Rebuild the gateway Docker image and run it with:
+```bash
+ docker run -it --rm \
+    -p 9696:9696 \ 
+    zoomcamp-10-gateway:002
+```
+
+Next, update the [docker-compose.yaml file](code/zoomcamp/docker-compose.yaml) to include the new gateway image and environment variables:
+```yaml
+environment:
+  - TF_SERVING_HOST=clothing-model:8500
+```
+
+Within Docker Compose, each container is accessible by its name (e.g., `gateway:9696` and `tf-serving:8500`). 
+
+To run Docker Compose, use the following command, which looks for `docker-compose.yaml` in the current directory and starts the containers:
+```bash
+ docker-compose up
+```
+
+Now, the two services can communicate. Test the service using the test script:
+```bash
+python test.py
+```
+
+### 🏃 Running Docker-Compose in Detached Mode
+To run Docker Compose in detached mode and return to the terminal, use:
+```bash
+ docker-compose up -d
+```
+Check running containers with:
+```bash
+ docker ps
+```
+To stop all running containers, execute:
+```bash
+ docker-compose down
+```
 
 ---
 
-## 10.5 Introduction to Kubernetes
+## 🚀 10.5 Introduction to Kubernetes  
+Kubernetes, also known as **K8s**, is an open-source system for automating the deployment, scaling, and management of containerized applications.  
 
-* The anatomy of a Kubernetes cluster
+### 🧩 Anatomy of a Kubernetes Cluster  
+Imagine we have a Kubernetes cluster. Within this cluster, there are **nodes** (servers or computers running the processes). On these nodes, we find 🐳 **pods:** containers that run specific images, with allocated resources like **RAM/CPU**.  
+
+Pods are typically grouped into **deployments** 📦. All pods in a deployment share the same Docker image and configuration. Think of a deployment as a set of identical workers, ready to process requests. For example, our **gateway service** can be structured as a deployment.  
+
+- Larger pods require more resources 💪.  
+- In addition to pods, Kubernetes uses **services** 🛎️, such as:  
+  - 🌐 `gateway service`: An entry point for external requests.  
+  - 🤖 `tf-model service`: Manages communication with model-serving pods.  
+
+### 🔄 How it Works  
+1. When a user uploads an image 🖼️ to the website, the request first reaches the **gateway service**.  
+2. The gateway routes the request to one of the available pods, distributing traffic evenly (load balancing ⚖️).  
+3. After pre-processing, the gateway deployment forwards the request to the **model service**.  
+4. The model service routes the request to a pod in the `tf-serving` deployment.  
+5. Predictions are made 🔮 and sent back to the user, following the same path.  
+
+### 📍 Service Types  
+Kubernetes services act as entry points to route requests to the correct pods:  
+- **External Services** (`Load Balancer` 🌐): Accessible from outside the cluster. Example: `gateway service`.  
+- **Internal Services** (`Cluster IP` 🔒): Accessible **only** within the cluster. Example: `model service`.  
+
+At the front of the cluster, there’s an **entry point** called `INGRESS` 🚪. This directs user traffic to the appropriate external services.  
+
+### ⚙️ Scaling with Kubernetes  
+To handle multiple users simultaneously, Kubernetes can launch additional pods 🚀.  
+- As traffic increases, Kubernetes **automatically scales** the deployment up 🆙.  
+- When traffic decreases, it scales down 🛑 to save resources.  
+- This dynamic scaling is managed by the **Horizontal Pod Autoscaler (HPA)** 📊.  
+- If existing nodes are overwhelmed, Kubernetes can even request the creation of new nodes to handle the extra load.  
+
+Kubernetes ensures that your application stays responsive, efficient, and ready to scale at any moment!  
 
 ---
 

@@ -4,6 +4,7 @@
 ### Tensorflow-Serving
 
 # Necessary import
+import os
 import grpc
 import tensorflow as tf
 from keras_image_helper import create_preprocessor
@@ -23,8 +24,8 @@ classes = [
     'skirt',
     't-shirt'
 ]
-# address where tf-serving is running
-host = 'localhost:8500'
+# address where tf-serving is running (by accessing the environment variables)
+host = os.getenv('TF_SERVING_HOST', 'localhost:8500')
 # Channel to access the port
 channel = grpc.insecure_channel(host) # use secure when not running locally to add authentication
 # To communicate with the service for making predictions
@@ -51,7 +52,7 @@ def prepare_request(X):
     # return request
     return pb_request
 
-# Funstion to prepare response
+# Function to prepare response
 def prepare_response(pb_response):
     # Get predictions
     preds = pb_response.outputs['output_0'].float_val
