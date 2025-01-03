@@ -158,7 +158,7 @@ We need to create a [docker-compose.yaml file](code/zoomcamp/docker-compose.yaml
 
 The Flask app in our gateway component is configured to access the model at localhost `8500`. This results in the app trying to find the model within the gateway container, rather than the TensorFlow Serving container. To fix this, we will make the host configurable by importing `os` in the gateway script to access environment variables and set the model host using:
 ```python
-os.getenv('TF_SERVING_HOST')
+os.getenv('TF_SERVING_HOST', 'localhost:8500')
 ```
 
 Rebuild the gateway Docker image and run it with:
