@@ -149,7 +149,7 @@ nano ~/.bashrc
 ```
 Add the following line at the end of the file (adjust `/bin` to the folder where Docker Compose is installed):
 ```bash
-export PATH="$(HOME)/bin:${PATH}"
+export PATH="${HOME}/bin:${PATH}"
 ```
 Save and exit.
 
@@ -242,8 +242,32 @@ Kubernetes ensures that your application stays responsive, efficient, and ready 
 
 ## 10.6 Deploying a simple service to Kubernetes
 
-* Create a simple ping application in Flask
-* Installing kubectl
+We will deploy a simple ping application (built with Flask) to Kubernetes cluster. We will have our ping application in the [ping folder](code/zoomcamp/ping/). Note that we need to install `flask`, `gunicorn` in this folder using: `pipenv install flask gunicorn`. Note that as we have another pipfile in the parent directory, we first had to create another pipfile in ping folder using  the command: `touch Pipfile` before installing. We also created a [dockerfile](code/zoomcamp/ping/Dockerfile) for this application, and built an image with: `docker build -t ping:v001 .`. Note that we specified the tag `v001` instead of letting the defalt one `latest` as we are going to use `kind` a local kubernetes cluster that needs specific tags. Now we can run the image with:
+`docker run -it --rm -p 9696:9696 ping:v001`. In another terminal: typing `curl localhost:9696/ping`.
+Now we need to deploy to kubernetes. For that we need to setup a local kubernetes cluster with `kind` and `kubectl` the tool we ill use to interact with these clusters. Note that when you use `docker desktop` on Windows or MacOs, you automatically get `kubectl` installed too. However, when using linux, you will have to install it yourself using [this link](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/). Note that you can decide to install the version of [`kubectl` from AWS](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html#kubectl-install-update). If installing manually, we can use the same bin folder used to install docker-compose. We also need to install `kind` and add it to our environment variables as follows if using Docker Desktop on Windows: 
+- INstall with: `curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.26.0/kind-windows-amd64`
+- rename the executable file `kind-windows-amd64.exe` as `kind.exe` and move it to our preferred binary folder. Note that the command `set` can allow us to find our `PATH` variable and its content. We can then choose a folder, where to add this executable file. It is recommended to create a folder `Kind` and add it to our path environment. If not on windows, follow the [link](https://kind.sigs.k8s.io/docs/user/quick-start/) to see the instructions.
+Using Linux or WSL, we can also:
+- Create a folder named bin in the home directory.
+- open the bin folder and install kind with the commad :
+```bash
+cd bin/
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-amd64
+```
+- Make it executable: `chmod +x ./kind`
+- Add it to the path variable: 
+   - move to the home folder: `cd`
+   - open the bash file: `nano .bashrc`
+   - add kind to the environment variable by prepending it to the path file: `export PATH="${HOME}/bin:${PATH}"`
+   - Save with CTRL + O and Enter, and exit with Ctrl + X
+- Re-excute the bash script: `source .bashrc`
+- Check the path enviroment variable: `echo $PATH`
+The command `which kind` allows us to check where the executable command kind is installed.
+Now, to create a Kubernetes cluster: `kind create cluster`.
+Note that I would recommmend installing both on Windows and WSL Ubuntu if using WSL.
+
+
+
 * Setting up a local Kubernetes cluster with Kind
 * Creating a deployment
 * Creating a service 
