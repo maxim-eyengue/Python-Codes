@@ -292,7 +292,7 @@ In this section, we will deploy a simple ping application (built with Flask) to 
    ```
    - Add `kind` to the `PATH` by editing `.bashrc`:
      ```bash
-     nano ~/.bashrc # to edit the bash script. NB:  save changes with CTRL + O and Enter, and exit with Ctrl + X
+     nano ~/.bashrc # to edit the bash script. NB: save changes with CTRL + O and Enter, and exit with Ctrl + X
      export PATH="${HOME}/bin:${PATH}" # add kind to the path
      source ~/.bashrc # execute the bash script
      ```
@@ -414,13 +414,281 @@ This command will allow the pods to change status from `<pending>` to `<running>
    curl localhost:8080/ping # test to return `PONG`
    ```
 
+### ⚙️ Configure External Connections with MetalLB  
+Set up and use `MetalLB` as an external load balancer.  
+
+#### 1. 🚀 Install MetalLB  
+Apply the MetalLB manifest to deploy it to your cluster:  
+```bash
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+```  
+
+#### 2. ⏳ Verify MetalLB Deployment  
+Wait for the MetalLB pods (controller and speakers) to be ready:  
+```bash
+kubectl wait --namespace metallb-system \
+             --for=condition=ready pod \
+             --selector=app=metallb \
+             --timeout=90s
+```  
+
+#### 3. 🛠️ Configure Address Pool for Load Balancers  
+1. 🔍 Retrieve the IP address range from the Docker `kind` network:  
+   ```bash
+   docker network inspect -f '{{.IPAM.Config}}' kind
+   ```  
+
+2. 📝 Create an IP address pool using a `metallb-config.yaml` file:  
+   ```yaml
+   apiVersion: metallb.io/v1beta1
+   kind: IPAddressPool
+   metadata:
+     name: example
+     namespace: metallb-system
+   spec:
+     addresses:
+     - 172.20.255.200-172.20.255.250
+   ---
+   apiVersion: metallb.io/v1beta1
+   kind: L2Advertisement
+   metadata:
+     name: example
+     namespace: metallb-system
+   ```  
+
+3. 📤 Apply the MetalLB configuration:  
+   ```bash
+   kubectl apply -f metallb-config.yaml
+   ```  
+
+#### 4. 📦 Deploy Application and Services  
+Apply the deployment and service configurations:  
+```bash
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```  
+
+#### 5. 🌐 Retrieve the External Load Balancer IP  
+```bash
+kubectl get service
+```  
+
+#### 6. 🧪 Test the Load Balancer  
+Verify the service by sending a request to the load balancer IP:  
+```bash
+curl <LB_IP>:80/ping
+```  
+
 ---
 
-## 10.7 Deploying TensorFlow models to Kubernetes
+## 🚀 10.7 Deploying TensorFlow Models to Kubernetes
 
-* Deploying the TF-Serving model
-* Deploying the Gateway
-* Testing the service
+We will create a folder with configuration files for the TensorFlow (TF) Serving model and the Gateway. 🗂️
+
+### 🛠️ Model Deployment
+Create a deployment configuration file for the model:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tf-serving-clothing-model  # Model deployment name
+spec:
+  selector:
+    matchLabels:
+      app: tf-serving-clothing-model
+  template:
+    metadata:
+      labels:
+        app: tf-serving-clothing-model
+    spec:
+      containers:
+      - name: tf-serving-clothing-model
+        image: zoomcamp-10-model:xception-v4-001  # Model image name
+        resources:
+          limits:
+            memory: "512Mi"  # Adding more RAM may improve performance 🚀
+            cpu: "0.5"  # Half CPU core ⚙️
+        ports:
+        - containerPort: 8500  # Port where TF-Serving listens for gRPC requests 🎯
+```
+
+Make the model image available by running:
+```bash
+kind load docker-image zoomcamp-10-model:xception-v4-001
+```
+
+Apply the configuration to the cluster with:
+```bash
+kubectl apply -f model-deployment.yaml
+```
+
+To remove a deployment, use:
+```bash
+kubectl delete -f model-deployment-file
+```
+
+##### 🧪 Testing the TF-Serving Model
+To test the TF-Serving clothing model, port-forward the pod:
+```bash
+kubectl port-forward tf-serving-clothing-model-pod-name 8500:8500
+```
+
+Modify the gateway application by uncommenting the hardcoded URL and prediction logic to test the model. ⚡
+
+### 📡 Model Service Configuration
+Define a service configuration file for the model:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: tf-serving-clothing-model
+spec:
+  selector:
+    app: tf-serving-clothing-model
+  ports:
+  - port: 8500
+    targetPort: 8500
+```
+
+Apply the changes with:
+```bash
+kubectl apply -f model-service.yaml
+```
+
+Test the service by port-forwarding it:
+```bash
+kubectl port-forward service/tf-serving-clothing-model 8500:8500
+```
+
+Then, send requests through the gateway. 🌐
+
+**Note:** ⚠️ Minor negligible errors may occur because gRPC is used instead of HTTP. 
+
+### 🌐 Gateway Deployment
+Create a deployment configuration file for the gateway:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - name: gateway
+        image: zoomcamp-10-gateway:002  # Gateway image name
+        resources:
+          limits:
+            memory: "128Mi"  # Memory limit 🧠
+            cpu: "100m"  # Minimal CPU usage ⚙️
+        ports:
+        - containerPort: 9696  # Port for gateway requests 🎯
+        env:
+        - name: TF_SERVING_HOST  # Environment variable for model URL 🌍
+          value: tf-serving-clothing-model.default.svc.cluster.local:8500  # Kubernetes convention for service URL
+```
+
+To verify the deployment, log into one of the pods (e.g., ping deployment pod) to send request from the ping container to itself:
+```bash
+kubectl exec -it ping-deployment-pod-name -- bash
+```
+
+Test the service by running:
+```bash
+curl localhost:9696/ping
+```
+
+If `curl` is not found, install it:
+```bash
+apt update && apt upgrade
+apt install curl
+```
+
+Re-run the test:
+```bash
+curl localhost:9696/ping  # Should return 'PONG' 🏓
+```
+
+Now, send a request from the container to the service:
+```bash
+curl ping.default.svc.cluster.local/ping
+```
+
+To test communication with the TF-Serving model, we try:
+```bash
+curl tf-serving-clothing-model.default.svc.cluster.local:8500
+```
+As the tf-serving application doesn't want to deal with sending `http requests`, we get an error: `not allowed`. Since HTTP requests are not allowed by the TF-Serving application, use `telnet` (a very low-level library allowing to connect to any port and send something to it) to test connectivity:
+```bash
+apt install telnet
+```
+
+Run the command to verify that we can reach this service:
+```bash
+telnet tf-serving-clothing-model.default.svc.cluster.local:8500
+```
+
+Apply the gateway configuration:
+```bash
+kubectl apply -f gateway-deployment.yaml
+```
+
+Port-forward the gateway pod for testing:
+```bash
+kubectl port-forward gateway-pod-name 9696:9696
+```
+
+Run the [test script](code/zoomcamp/test.py) from another terminal to verify functionality. ✅
+
+### 📡 Gateway Service Configuration
+Define a service configuration file for the gateway:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: gateway
+  ports:
+  - port: 80  # Service port 🌐
+    targetPort: 9696  # Target port on container 🎯
+```
+
+Apply the changes:
+```bash
+kubectl apply -f gateway-service.yaml
+```
+
+Check running services:
+```bash
+kubectl get service
+```
+
+To change the service type to `LoadBalancer`:
+1. Update the configuration file.
+2. Reapply the changes.
+
+For testing, port-forward the service:
+```bash
+kubectl port-forward service/gateway 8080:80
+```
+
+Run the [new test script](code/zoomcamp/test_service.py) to verify the setup. 🧪
+
+**Note:** `gRPC` is not the same as traditional `HTTP`. This distinction can lead to issues with load balancing (the process of routing requests to pods managed by a service) when deploying `gRPC` applications on Kubernetes. Specifically, when multiple pods are created, they may not receive an equal distribution of requests.
+
+For more details on addressing load balancing challenges in production, refer to the following article: [gRPC Load Balancing on Kubernetes Without Tears](https://kubernetes.io/blog/2018/11/07/grpc-load-balancing-on-kubernetes-without-tears/).
 
 ---
 
