@@ -240,37 +240,179 @@ Kubernetes ensures that your application stays responsive, efficient, and ready 
 
 ---
 
-## 10.6 Deploying a simple service to Kubernetes
+## 🚀 10.6 Deploying a Simple Service to Kubernetes
 
-We will deploy a simple ping application (built with Flask) to Kubernetes cluster. We will have our ping application in the [ping folder](code/zoomcamp/ping/). Note that we need to install `flask`, `gunicorn` in this folder using: `pipenv install flask gunicorn`. Note that as we have another pipfile in the parent directory, we first had to create another pipfile in ping folder using  the command: `touch Pipfile` before installing. We also created a [dockerfile](code/zoomcamp/ping/Dockerfile) for this application, and built an image with: `docker build -t ping:v001 .`. Note that we specified the tag `v001` instead of letting the defalt one `latest` as we are going to use `kind` a local kubernetes cluster that needs specific tags. Now we can run the image with:
-`docker run -it --rm -p 9696:9696 ping:v001`. In another terminal: typing `curl localhost:9696/ping`.
-Now we need to deploy to kubernetes. For that we need to setup a local kubernetes cluster with `kind` and `kubectl` the tool we ill use to interact with these clusters. Note that when you use `docker desktop` on Windows or MacOs, you automatically get `kubectl` installed too. However, when using linux, you will have to install it yourself using [this link](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/). Note that you can decide to install the version of [`kubectl` from AWS](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html#kubectl-install-update). If installing manually, we can use the same bin folder used to install docker-compose. We also need to install `kind` and add it to our environment variables as follows if using Docker Desktop on Windows: 
-- INstall with: `curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.26.0/kind-windows-amd64`
-- rename the executable file `kind-windows-amd64.exe` as `kind.exe` and move it to our preferred binary folder. Note that the command `set` can allow us to find our `PATH` variable and its content. We can then choose a folder, where to add this executable file. It is recommended to create a folder `Kind` and add it to our path environment. If not on windows, follow the [link](https://kind.sigs.k8s.io/docs/user/quick-start/) to see the instructions.
-Using Linux or WSL, we can also:
-- Create a folder named bin in the home directory.
-- open the bin folder and install kind with the commad :
+In this section, we will deploy a simple ping application (built with Flask) to a Kubernetes cluster. The ping application is located in the [ping folder](code/zoomcamp/ping/).
+
+### 🛠️ Setting Up the Application
+1. Install `flask` and `gunicorn` in the `ping` folder using:
+   ```bash
+   pipenv install flask gunicorn
+   ```
+2. Since there is another Pipfile in the parent directory, create a new Pipfile in the `ping` folder before installing the dependencies:
+   ```bash
+   touch Pipfile
+   ```
+3. Create a [Dockerfile](code/zoomcamp/ping/Dockerfile) for the application and build the image:
+   ```bash
+   docker build -t ping:v001 .
+   ```
+   - We specify the tag `v001` instead of the default `latest` because `kind` (a local Kubernetes cluster) requires specific tags.
+4. Run the image locally:
+   ```bash
+   docker run -it --rm -p 9696:9696 ping:v001
+   ```
+5. In another terminal, test it:
+   ```bash
+   curl localhost:9696/ping
+   ```
+
+### ☸️ Deploying to Kubernetes
+
+#### 📥 Installing Kubernetes Tools
+- Set up a local Kubernetes cluster using `kind` and `kubectl` (the tool to interact with clusters).
+- If using Docker Desktop on Windows or macOS, `kubectl` is installed automatically. On Linux, install it manually using [this guide](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+- Alternatively, install `kubectl` from AWS by following [this link](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html#kubectl-install-update).
+
+
+#### ⚙️ Installing `kind`
+>>> You can follow the [link](https://kind.sigs.k8s.io/docs/user/quick-start/) to see the instructions.
+- **🪟 Windows (Docker Desktop):**
+   ```bash
+   curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.26.0/kind-windows-amd64
+   ```
+   - Rename the executable to `kind.exe` and move it to a binary folder in your `PATH`.
+   - Use the `set` command to check and update your `PATH` variable.
+- **🐧 Linux/WSL:**
+   ```bash
+   mkdir -p ~/bin # create a folder named bin in the home directory
+   cd ~/bin # open the bin folder
+   curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-amd64 # install kind
+   chmod +x ./kind # make kind executable
+   ```
+   - Add `kind` to the `PATH` by editing `.bashrc`:
+     ```bash
+     nano ~/.bashrc # to edit the bash script. NB:  save changes with CTRL + O and Enter, and exit with Ctrl + X
+     export PATH="${HOME}/bin:${PATH}" # add kind to the path
+     source ~/.bashrc # execute the bash script
+     ```
+   - Check the path enviroment variable:
+   ```bash 
+   echo $PATH
+   ```
+   - Verify the installation:
+     ```bash
+     which kind
+     ```
+
+### ⚒️ Creating a Kubernetes Cluster
 ```bash
-cd bin/
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-amd64
+kind create cluster
 ```
-- Make it executable: `chmod +x ./kind`
-- Add it to the path variable: 
-   - move to the home folder: `cd`
-   - open the bash file: `nano .bashrc`
-   - add kind to the environment variable by prepending it to the path file: `export PATH="${HOME}/bin:${PATH}"`
-   - Save with CTRL + O and Enter, and exit with Ctrl + X
-- Re-excute the bash script: `source .bashrc`
-- Check the path enviroment variable: `echo $PATH`
-The command `which kind` allows us to check where the executable command kind is installed.
-Now, to create a Kubernetes cluster: `kind create cluster`.
-Note that I would recommmend installing both on Windows and WSL Ubuntu if using WSL.
+- If you encounter errors with `kind create cluster` on WSL2, specify the node image:
+  ```bash
+  kind create cluster --image kindest/node:v1.23.0
+  ```
 
+### 🗂️ Configuring `kubectl`
+We need to configure `kubectl` to access the cluster created and use it:
+```bash
+kubectl cluster-info --context kind-kind
+```
+- To debug:
+  ```bash
+  kubectl cluster-info dump
+  ```
+- List services, pods, and deployments:
+  ```bash
+  kubectl get service
+  kubectl get pod
+  kubectl get deployment
+  ```
+- View active Docker processes, including `kind-control-plane`:
+  ```bash
+  docker ps
+  ```
+>>> We can install an extension for kubernetes on Visual Studio Code to make our work easier, as it proposes useful templates. Just typing deployment or service in this file is enough to get a template suggestion.
 
+### 📄 Creating the Deployment
+- Create a [deployment.yaml](code/zoomcamp/ping/deployment.yaml) file to specify how the pods in our deployment will look like:
 
-* Setting up a local Kubernetes cluster with Kind
-* Creating a deployment
-* Creating a service 
+ ```yaml
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata: 
+        name: ping-deployment # name of the deployment
+      spec:
+        replicas: 1 # number of pods to create
+        selector:
+          matchLabels: # all pods that have the label app named 'ping' belong to 'ping-deployment'
+            app: ping
+        template: # template of pods (all pods within a deployment have the same configuration)
+          metadata:
+            labels: # each pod / app gets the same label (i.e., ping in our case)
+              app: ping
+          spec:
+            containers: 
+            - name: ping-pod # name of the container
+              image: ping:v001 # docker image with tag
+              resources: # pod resources
+                limits:
+                  memory: "128Mi" # 128 Mbytes of RAM
+                  cpu: "500m" # 0.5 CPU
+              ports:
+              - containerPort: 9696 # port to expose
+```
+>>> Tip: the command `htop` helps to visualize resources. To make sure the resources allocated do no surpass the limit of our computer, you can install it as follows: 
+```bash
+sudo apt install && sudo apt upgrade
+sudo apt install htop
+sudo snap install htop
+```
+- Apply the deployment:
+   ```bash
+   kubectl apply -f deployment.yaml
+   ```
+- We can now check available pods (`kubectl get pod`), and then the only one created with a detailed description using the command: `kubectl describe pod pod-name`. If the pod is pending, as expected, load the Docker image into the cluster:
+   ```bash
+   kind load docker-image ping:v001
+   ```
+This command will allow the pods to change status from `<pending>` to `<running>`.
+
+- Forward ports to test:
+   ```bash
+   kubectl port-forward pod/pod-name 9696:9696 # `Port-fowarding` can be used to test the deployment before creating a service, by connecting the ping application port of our kubernetes cluster to a port on our local computer using kubectl.
+   curl localhost:9696/ping # to test the deployment by returning `PONG`
+   ```
+
+### 🌐 Creating the Service
+- Create a [service.yaml](code/zoomcamp/ping/service.yaml):
+   ```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: ping # service name
+   spec:
+     selector:
+       app: ping # to understand which pods are qualified to receive the request (those labelled with `ping`)
+     ports:
+     - port: 80 # port in the service where the requests will be sent before being forwarded to the adequate pod port (`80`: default http port to get requests)
+       targetPort: 9696 # port on the pod / container pod
+   ```
+- Apply the service configuration:
+   ```bash
+   kubectl apply -f service.yaml
+   ```
+- Check the service:
+   ```bash
+   kubectl get service # or `kubectl get svc`
+   ```
+>>> Note that the ping service type is `ClusterIP` (internal service). As we are using `kind` a local kubernetes cluster, services types don't really matter but with kubernetes clusters, it does matter when something is exposed out of kubernetes cluster or not. 
+- Change the service type to `LoadBalancer` for external access and reapply the configuration. You can verify updates by checking services: this time the `EXTERNAL-IP` address is `<pending>` as it still needs to be configured. Now, use port-forwarding to simulate an external connection:
+   ```bash
+   kubectl port-forward service/ping 8080:80 # we use the port `8080` on our local computer instead of `80` to avoid permission requiremnts (you can use `sudo` and port `80`)
+   curl localhost:8080/ping # test to return `PONG`
+   ```
 
 ---
 
