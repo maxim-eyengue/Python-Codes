@@ -692,23 +692,182 @@ For more details on addressing load balancing challenges in production, refer to
 
 ---
 
-## 10.8 Deploying to EKS
+## 10.8 🚀 Deploying to EKS
 
-* Publishing the image to ECR with a EKS cluster on AWS
+Deploying our application (gateway and model) locally using `kind` is great for experiments, but for cloud deployment, AWS `Elastic Kubernetes Service` (EKS) 🌐 provides a powerful solution. We'll create an EKS cluster using [`eksctl`](https://eksctl.io/installation/) ⚙️, avoiding the need for manual setup via the AWS web interface.
+
+🔧 **Prerequisites:** Ensure that AWS CLI and Kubectl are installed by following [this guide](https://docs.aws.amazon.com/eks/latest/userguide/setting-up.html). Now let's install `eksctl`:
+
+- 📂 Navigate to the bin directory: `cd ~/bin`
+- 📥 Download and extract `eksctl`:
+```bash
+# for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+ARCH=amd64 # set our architecture
+PLATFORM=$(uname -s)_$ARCH # identify our system platform
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz" # download the package
+tar -xzf eksctl_$PLATFORM.tar.gz && rm eksctl_$PLATFORM.tar.gz # unpack and remove the tar file
+```
+
+🔐 **IAM Access:** Ensure your IAM user has the necessary permissions for [EKS actions](https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonelastickubernetesservice.html) and [service manipulations](https://docs.aws.amazon.com/IAM/latest/UserGuide/using-service-linked-roles.html).
+
+### 🚧 Creating the Cluster
+Return to your working directory. Create a cluster using the command:
+```bash
+eksctl create cluster --name cluster-name
+```
+Or, define the cluster using a configuration file (eks-config.yaml):
+```yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: mlzoomcamp-eks
+  region: us-east-1
+
+nodeGroups: # similar to deployments
+  - name: ng-m5-xlarge 
+    instanceType: m5.xlarge # 4 CPUs and 16 GB of memory 🖥️
+    desiredCapacity: 1 # 1 machine of this type
+```
+and use it to create the cluster:
+```bash
+# Create the cluster with a configuration file
+eksctl create cluster -f eks-config.yaml
+```
+
+🗑️ To delete a cluster: `eksctl delete cluster --name cluster-name`. 
+
+⏳ While waiting for the cluster creation, we need to publish our local images to ECR (AWS Container Registry) 📦 as they need to be available if we want to use them:
+`aws ecr create-repository --repository-name mlzoomcamp-images`. We copy the repository URI furnished by this command, and then set the image addresses with the following code:
+
+```bash
+# Get the prefix address
+ACCOUNT_ID=387546586013
+REGION=us-east-1
+REGISTRY_NAME=mlzoomcamp-images
+PREFIX=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REGISTRY_NAME}
+
+# Set gateway address and tag it
+GATEWAY_LOCAL=zoomcamp-10-gateway:002
+GATEWAY_REMOTE=${PREFIX}:zoomcamp-10-gateway-002
+docker tag ${GATEWAY_LOCAL} ${GATEWAY_REMOTE}
+
+# Set model address and tag it
+MODEL_LOCAL=zoomcamp-10-model:xception-v4-001
+MODEL_REMOTE=${PREFIX}:zoomcamp-10-model-xception-v4-001
+docker tag ${MODEL_LOCAL} ${MODEL_REMOTE}
+```
+
+🔑 Now we can log in to ECR and push the model and the gateway:
+```bash
+# Login to ECR
+$(aws ecr get-login --no-include-email) # there are more secure ways to login
+
+# Push model and gateway
+docker push ${MODEL_REMOTE}
+docker push ${GATEWAY_REMOTE}
+```
+
+ 🔄 Replace the local image names in the deployment files with thiose from ECR:
+ ```bash
+ # Output the new image names 
+echo ${MODEL_REMOTE}  # for model-deployment
+echo ${GATEWAY_REMOTE}  # for gateway-deployment
+```
+
+### 🛠️ Deploying to EKS
+Once the cluster is ready, verify the nodes:
+```bash
+kubectl get nodes
+```
+⏱️ With `docker ps` we still get the ones created with `kind`.
+
+Now let's apply the model configuration files to our cluster:
+```bash
+# Apply model configuration files
+kubectl apply -f model-deployment.yaml # deployment
+kubectl apply -f model-service.yaml # service
+
+# Check if the service is ready
+kubectl get pod # checking pods
+kubectl get service # checking the service
+```
+We can do port-forwarding for the tf-serving service: `kubectl port-forward service/tf-serving-clothing-model 8500:8500` and test it using our gateway (note that changes should be made to this file by uncommenting and commenting some code for the gateway script to become just a test file).
+
+Apply the gateway configuration files to our cluster:
+```bash
+# Apply gateway configuration files
+kubectl apply -f gateway-deployment.yaml # deployment
+kubectl apply -f gateway-service.yaml # service
+
+# Check if the gateway is ready
+kubectl get pod # checking pods
+kubectl get service # checking the service
+```
+
+🌐 **Accessing the Gateway:**
+This time we have a URL address at the External-IP information for our service. 
+
+🔌 With port-forwarding, we can test that the service works:
+```bash
+# Port forwarding
+kubectl port-forward service/gateway 8080:80
+# Test
+python test
+```
+To verify service status by checking the external connection we use: `telnet External-IP-address`.
+
+🧪 **Testing:**
+Once the service is up, test it with our [new script file](code/zoomcamp/test_eks.py):
+```bash
+python test_eks.py
+```
+You can monitor your cluster in the AWS console.
+
+>>> ⚠️ **Important Note:** EKS is not part of the AWS free tier. The cluster's DNS name allows public access, so implement security measures to restrict unauthorized access.
+
+🛑 To stop the cluster, we can delete it:
+```bash
+eksctl delete cluster --name mlzoomcamp-eks
+```
+especially as it costs money.
 
 ---
 
-# 🎯 **Key Takeaways** 
+# 🎯 **Key Takeaways**  
 
-* TF-Serving is a system for deploying TensorFlow models
-* When using TF-Serving, we need a component for pre-processing 
-* Kubernetes is a container orchestration platform
-* To deploy something on Kubernetes, we need to specify a deployment and a service
-* You can use Docker compose and Kind for local experiments
+We designed an architecture with two components:   
+1. **TF-Serving Component** – Uses TensorFlow Serving to handle inference.  
+2. **Gateway Component** – Acts as our serving layer, gathering user input (HTTP image links) and communicating with gRPC used by our model.  
 
+🔹 **Why Two Components?**  
+Having separate components allows for efficient resource management (CPU, GPU) and better scaling flexibility.  
 
+💡 **Running Components Together**  
+`docker-compose` was essential for running both components seamlessly.  
 
+🚀 **Deploying Kubernetes Locally**  
+`kind` is a fantastic tool for deploying Kubernetes clusters locally. Other great options include: `k3d`, `minikube`, `k3s`, `microk8s`, `EKS Anywhere`, etc. 
 
+🌐 **Additional Tools to Explore**  
+- [`Rancher Desktop`](https://rancherdesktop.io/) – Similar to Docker Desktop but integrates Kubernetes.  
+- [`LENS`](https://k8slens.dev/) – A powerful IDE for managing and monitoring Kubernetes clusters.  
 
+☁️ **Cloud Providers for Kubernetes**  
+- **AWS** – `EKS cluster` allows Kubernetes deployments but isn't free.  
+- **Other Providers** – GCP, Azure, and DigitalOcean offer managed Kubernetes services.  
+
+⚙️ **Cross-Platform Configurations**  
+The configuration files created are universal and can work on any Kubernetes cluster. Just update the image names as needed.  
+
+📦 **Namespaces for Organization**  
+Kubernetes namespaces are helpful for structuring your applications (the default namespace is `default`).  
+
+### 🔑 **Quick Points**  
+- **TF-Serving** – A system to deploy TensorFlow models.  
+- **Pre-processing** – Required alongside TF-Serving for complete pipelines.  
+- **Kubernetes** – Orchestrates and manages containers.  
+- **Deployments & Services** – Essential for deploying on Kubernetes.  
+- **Local Testing** – Use Docker Compose and `kind` for local development and testing.  
    
 ---
