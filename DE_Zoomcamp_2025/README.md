@@ -1,6 +1,6 @@
 # Data Engineering Zoomcamp 2025
 
-I am happy to share my progress with you as I complete the Data Engineering Zoomcamp Certification of te DataTalkClub.
+I am happy to share my progress with you as I complete the Data Engineering Zoomcamp Certification of the DataTalkClub.
 
 Syllabus
 
