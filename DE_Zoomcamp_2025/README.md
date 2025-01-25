@@ -2,16 +2,6 @@
 
 I am happy to share my progress with you as I complete the Data Engineering Zoomcamp Certification of te DataTalkClub.
 
-<p align="center">
-  <a href="https://airtable.com/shr6oVXeQvSI5HuWD"><img src="https://user-images.githubusercontent.com/875246/185755203-17945fd1-6b64-46f2-8377-1011dcb1a444.png" height="50" /></a>
-</p>
-
-- Register in [DataTalks.Club's Slack](https://datatalks.club/slack.html)
-- Join the [`#course-data-engineering`](https://app.slack.com/client/T01ATQK62F8/C01FABYF2RG) channel
-- Join the [course Telegram channel with announcements](https://t.me/dezoomcamp)
-- The videos are published on [DataTalks.Club's YouTube channel](https://www.youtube.com/c/DataTalksClub) in [the course playlist](https://www.youtube.com/playlist?list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb)
-- [Frequently asked technical questions](https://docs.google.com/document/d/19bnYs80DwuUimHM65UV3sylsCn2j1vziPOwzBwQrebw/edit?usp=sharing)
-
 Syllabus
 
 * [Module 1: Containerization and Infrastructure as Code](#module-1-containerization-and-infrastructure-as-code)
@@ -124,7 +114,7 @@ Putting everything we learned to practice
 
 ## Overview
 
-<img src="images/architecture/arch_v4_workshops.jpg" />
+<img src="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/images/architecture/arch_v4_workshops.jpg" />
 
 
 
@@ -144,14 +134,14 @@ Thanks to the course sponsors for making it possible to run this course
 
 <p align="center">
   <a href="https://kestra.io/">
-    <img height="120" src="images/kestra.svg">
+    <img height="120" src="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/images/kestra.svg">
   </a>
 </p>
 
 
 <p align="center">
   <a href="https://dlthub.com/">
-    <img height="90" src="images/dlthub.png">
+    <img height="90" src="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/images/dlthub.png">
   </a>
 </p>
 
