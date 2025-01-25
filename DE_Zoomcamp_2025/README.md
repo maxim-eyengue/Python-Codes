@@ -21,7 +21,7 @@ Syllabus
 
 ## Overview
 
-<img src="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/images/architecture/arch_v4_workshops.jpg" />
+<img src="images/arch_v4_workshops.jpg" />
 
 
 
