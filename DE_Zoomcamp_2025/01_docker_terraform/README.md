@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="1200" src="../images/data-eng-illus-2025.jpg" alt="Data Engineering Zoomcamp Illustration">
+    <img width="1200" src="../images/data-eng-illus.jpg" alt="Data Engineering Zoomcamp Illustration">
 </p>
 
 ## Module 1: Containerization and Infrastructure as Code

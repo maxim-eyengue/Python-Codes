@@ -4,7 +4,7 @@ I am happy to share my progress with you as I complete the Data Engineering Zoom
 
 Syllabus
 
-* [Module 1: Containerization and Infrastructure as Code](/01_docker_terraform/)
+* [Module 1: Containerization and Infrastructure as Code](./01_docker_terraform/)
 * [Module 2: Workflow Orchestration](#module-2-workflow-orchestration)
 * [Workshop 1: Data Ingestion](#workshop-1-data-ingestion)
 * [Module 3: Data Warehouse](#module-3-data-warehouse)
