@@ -4,7 +4,7 @@ I am happy to share my progress with you as I complete the Data Engineering Zoom
 
 Syllabus
 
-* [Module 1: Containerization and Infrastructure as Code](#module-1-containerization-and-infrastructure-as-code)
+* [Module 1: Containerization and Infrastructure as Code](/01_docker_terraform/)
 * [Module 2: Workflow Orchestration](#module-2-workflow-orchestration)
 * [Workshop 1: Data Ingestion](#workshop-1-data-ingestion)
 * [Module 3: Data Warehouse](#module-3-data-warehouse)
@@ -41,14 +41,14 @@ Thanks to the course sponsors for making it possible to run this course
 
 <p align="center">
   <a href="https://kestra.io/">
-    <img height="120" src="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/images/kestra.svg">
+    <img height="120" src="images/kestra.svg">
   </a>
 </p>
 
 
 <p align="center">
   <a href="https://dlthub.com/">
-    <img height="90" src="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/images/dlthub.png">
+    <img height="90" src="images/dlthub.png">
   </a>
 </p>
 

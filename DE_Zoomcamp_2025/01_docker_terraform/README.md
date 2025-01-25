@@ -1,3 +1,5 @@
+![Data Engineering Zoomcamp Illustration](../images/data-eng-illus-2025.jpg)
+
 ## Module 1: Containerization and Infrastructure as Code
 
 * Course overview
