@@ -11,7 +11,7 @@ Let's run docker with the `python:3.12.8` image in an interactive mode, using th
 docker run -it --entrypoint=bash python:3.12.8
 ```
 
-The version of `pip` in the image is `24.3.1 24.2.1 23.3.1 23.2.1`.
+The version of `pip` in the image obtained with the commad `pip --version` is `24.3.1`.
 
 
 ## Question 2. Understanding Docker networking and docker-compose
