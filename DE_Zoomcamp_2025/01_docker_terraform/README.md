@@ -27,7 +27,6 @@ Imagine running a **data pipeline** in a container. A data pipeline is a process
 
 With Docker, you can run **multiple data pipelines** simultaneously, each in its own container, without any interference. 🚦 You can even run databases like **Postgres** and tools like **pgAdmin** in separate containers, and they can communicate seamlessly. 🤝
 
----
 
 #### 🛠️ **Why Should Data Engineers Care About Docker?** 🛠️
 
@@ -40,7 +39,6 @@ With Docker, you can run **multiple data pipelines** simultaneously, each in its
 3. **Cloud Deployment** ☁️  
    Docker images can be easily deployed to cloud environments like **Google Cloud Kubernetes**, **AWS Batch**, or serverless platforms like **AWS Lambda** and **Google Cloud Functions**. This ensures consistent code execution in production. 🚀
 
----
 
 #### 🚀 **Getting Started with Docker** 🚀
 
@@ -77,7 +75,6 @@ Inside this directory, we'll create a [**Dockerfile**](./2_docker_sql/Dockerfile
      docker run -it --entrypoint bash python:3.9
      ```
 
----
 
 #### 🛠️ **Creating a Dockerfile** 🛠️
 
@@ -104,7 +101,6 @@ docker run -it test:pandas
 ```
 Now, every time you run this image, **pandas** will be available. 🐼
 
----
 
 #### 📂 **Adding a Data Pipeline** 📂
 
