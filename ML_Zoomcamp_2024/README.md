@@ -6,17 +6,17 @@ I'm happy to share my progress completing the Machine Learning DataTalkClub Zoom
 
 ### Syllabus 
 
-- [Introduction to Machine Learning](/01_intro/)
-- [Machine Learning for Regression](/02_regression/)
-- [Machine Learning for Classification](/03_classification/)
+- [Introduction to Machine Learning](./01_intro/)
+- [Machine Learning for Regression](./02_regression/)
+- [Machine Learning for Classification](./03_classification/)
 - [Evaluation Metrics for Classification](/04_evaluation/)
-- [Deploying Machine Learning Models](/05_deployment/)
-- [Decision Trees and Ensemble Learning](/06_trees/)
-- [Midterm Project](/07_midterm_project_reviews/)
-- [Neural Networks and Deep Learning](/08_deep_learning/)
-- [Serverless Deep Learning](/09_serverless/)
-- [Kubernetes and TensorFlow Serving](/10_kubernetes/)
-- [Capstone Project 1](/11_capstone_project_reviews/)
+- [Deploying Machine Learning Models](./05_deployment/)
+- [Decision Trees and Ensemble Learning](./06_trees/)
+- [Midterm Project](./07_midterm_project_reviews/)
+- [Neural Networks and Deep Learning](./08_deep_learning/)
+- [Serverless Deep Learning](./09_serverless/)
+- [Kubernetes and TensorFlow Serving](./10_kubernetes/)
+- [Capstone Project 1](./11_capstone_project_reviews/)
 
 
 ## Course Supporters and Partners
