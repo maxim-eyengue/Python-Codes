@@ -28,4 +28,5 @@ Thanks to the course sponsors for making it possible to run this course
     <img height="120" src="https://github.com/DataTalksClub/llm-zoomcamp/raw/main/images/saturn-cloud.png">
   </a>
 </p>
+
 ---
