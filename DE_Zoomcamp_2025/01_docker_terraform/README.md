@@ -149,7 +149,7 @@ docker run -it \  # Run the Docker image in interactive mode
    -e POSTGRES_USER="root" \  # Set the username
    -e POSTGRES_PASSWORD="root" \  # Set the password
    -e POSTGRES_DB="ny_taxi" \  # Set the database name
-   -v "$(pwd)"/ny_taxi_postgres_data:/var/lib/postgresql/data \  # Mount a volume for persistent data storage
+   -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \  # Mount a volume for persistent data storage
    -p 5432:5432 \  # Map port 5432 on the host to port 5432 in the container
    postgres:13  # Specify the Docker image
 ```
@@ -216,18 +216,132 @@ jupyter notebook
    ```
 
 
-### 🧪 Testing the Connection without pgcli
+#### 🧪 Testing the Connection without pgcli
 
 You can also use [this notebook](./2_docker_sql/02-pg-test-connection.ipynb) to test the Postgres connection and ensure everything works smoothly.
 
 
-### 🚀 Final Notes
+##### 🚀 Final Notes
 - Use **VS Code** or **PyCharm** as alternatives to Jupyter.
 - If you don't see the `ny_taxi_data` folder in Jupyter, adjust permissions:
   ```bash
   sudo chmod a+rwx ny_taxi_postgres_data
   ```
 
+---
+
+### 🚀 3 - Connecting PgAdmin and PostgreSQL  
+
+Let's start by running our PostgreSQL database using the following command:  
+
+```bash
+docker run -it \
+   -e POSTGRES_USER="root" \
+   -e POSTGRES_PASSWORD="root" \
+   -e POSTGRES_DB="ny_taxi" \ 
+   -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \ 
+   -p 5432:5432 \  
+   postgres:13 
+```
+
+Next, let's connect to the database using `pgcli`:
+
+```bash
+pgcli -h localhost -p 5432 -u root -d ny_taxi
+```
+
+To ensure our data is stored correctly, let's run a simple query: 
+
+```sql
+SELECT MAX(tpep_pickup_datetime), MIN(tpep_pickup_datetime), MAX(total_amount)
+FROM yellow_taxi_data;
+```
+
+#### 🎨 Why Use PgAdmin?  
+
+While `pgcli` is useful, its command-line interface isn't the most convenient for exploring data. This is where **pgAdmin**, a web-based GUI for PostgreSQL, comes in handy! Instead of installing it manually, we can run it using Docker.  
+
+To start **PgAdmin** in Docker, use the following command:  
+
+```bash
+docker run -it \ 
+   -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \ 
+   -e PGADMIN_DEFAULT_PASSWORD="root" \ 
+   -p 8080:80 \ 
+   dpage/pgadmin4
+```
+
+##### 🔑 Understanding the Parameters
+
+- **`PGADMIN_DEFAULT_EMAIL`**: The username to log into PgAdmin.  
+- **`PGADMIN_DEFAULT_PASSWORD`**: The password for authentication.  
+- **`-p 8080:80`**: Maps port `8080` on our host machine to port `80` in the PgAdmin container, so that requests to `localhost:8080` are forwarded correctly.  
+
+Once this is done, open your browser and visit **`localhost:8080`**. Log in using:  
+- **Username**: `admin@admin.com`  
+- **Password**: `root`  
+
+#### 🔗 Connecting PostgreSQL and PgAdmin  
+
+To connect to our database, we need to create a new server:  
+1️⃣ Right-click on **Servers** → **Register** → **Server**  
+2️⃣ Set **Name** to `"Local Docker"`  
+3️⃣ Under **Connection**, enter:  
+   - **Host**: `localhost`  
+   - **Username**: `root`  
+   - **Password**: `root`  
+
+`localhost` means that the docker image of pgAdmin will be looking for `postgres` inside itself. However, PgAdmin runs inside a separate Docker container, so it can't directly see our PostgreSQL database. To fix this, we need to link both containers within the same network.
+
+##### 🌐 Creating a Docker Network  
+
+Run the following command to create a network:  
+
+```bash
+docker network create pg-network
+```
+
+Now, restart both PostgreSQL and PgAdmin while assigning them to this network:  
+
+```bash
+docker run -it \
+   -e POSTGRES_USER="root" \
+   -e POSTGRES_PASSWORD="root" \
+   -e POSTGRES_DB="ny_taxi" \ 
+   -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \ 
+   -p 5432:5432 \ 
+   --network=pg-network \ 
+   --name pg-database \
+   postgres:13 
+```
+
+```bash
+docker run -it \ 
+   -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \ 
+   -e PGADMIN_DEFAULT_PASSWORD="root" \ 
+   -p 8080:80 \ 
+   --network=pg-network \
+   --name pg-admin \
+   dpage/pgadmin4
+```
+
+##### 🏗️ Key Additions  
+- **`--network=pg-network`**: Ensures that both containers are in the same network, so they can communicate.  
+- **`--name pg-database`**: Assigns a name to our PostgreSQL container (for pgAdmin to find out how to connect to it).  
+- **`--name pg-admin`**: Assigns a name to the PgAdmin container (less critical since nothing connects to it).  
+
+#### ✅ Final Steps  
+
+Go back to PgAdmin, log in, and register a new server:  
+- **Name**: `"Docker Localhost"`  
+- **Host**: `pg-database`  
+- **Username**: `root`  
+- **Password**: `root`  
+
+Now, everything should work smoothly! 🎉 You can explore your database visually and even run queries using the built-in query tool.  
+
+📸 **Preview:**
+![Data First 100 rows](../images/pgAdmin_first_connection.png)
 
 
 ---
