@@ -343,5 +343,15 @@ Now, everything should work smoothly! 🎉 You can explore your database visuall
 📸 **Preview:**
 ![Data First 100 rows](../images/pgAdmin_first_connection.png)
 
+---
+
+### 4 - Dockerizing the Ingestion script
+
+We used a [notebook](./2_docker_sql/01-upload-data.ipynb) to load data into our postgres database. However, let's turn it into a script so we get a data pipeline. To convert our notebook to a script, we can use the command:
+```bash
+jupyter nbconvert --to=script 01-upload-data.ipynb
+```
+After renaming it, we can now prepare this [script](./2_docker_sql/ingest_data.py) to ingest data (take data and put it into a database).
+
 
 ---
