@@ -1,4 +1,4 @@
-# Machine Learning Zoomcamp 2025
+# Machine Learning Zoomcamp 2024
 
 <img src="zoomcamp.jpg" />
 
