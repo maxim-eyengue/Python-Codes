@@ -14,8 +14,10 @@ We will be using `TensorFlow` and `Keras` for training the models. `TensorFlow` 
 
 #### Setting up the Environment on Saturn Cloud
 
+Log into Saturn Cloud and create a secret key to push notebooks to GitHub using SSH.
+
 One possibility is to use an SSH key generated from GitHub:
-1. Log in to Saturn Cloud and create a secret key to push notebooks to GitHub using SSH. If you haven't already, generate an SSH key on your laptop associated with your GitHub account. Follow this [tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+1. If you haven't already, generate an SSH key on your laptop associated with your GitHub account. Follow this [tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 2. After creating a resource, add your public SSH key when prompted, following the steps outlined [here](https://github.com/DataTalksClub/machine-learning-zoomcamp/blob/master/08-deep-learning/01b-saturn-cloud.md).
 3. Once the environment is set up, ensure that `TensorFlow` is installed by importing it and checking its version.
 
