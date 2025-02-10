@@ -19,11 +19,13 @@ This project focuses on building and comparing machine learning models to predic
 - Feature importance analysis
 
 ## Project Structure
+```
 Diabetes_Predictive_Modelling_Project/
 ├── Diabetes_Predictive_Modelling.ipynb  # Main notebook
 ├── diabetes.csv                         # Dataset
 ├── README.md                            # This file
 └── Diabetes.jpg                         # An illustration
+```
 
 ## Dataset
 The Pima Indians Diabetes Dataset from [Kaggle](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database):
