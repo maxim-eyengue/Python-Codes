@@ -2,7 +2,7 @@
 # Python Tools
 ![Tools with Python](./Automated-machine-learning.jpg)
 
-This repository contains a collection of Python tools implemented in Jupyter notebooks. These tools are designed to automate tasks and perform calculations efficiently.
+This folder contains a collection of Python tools implemented in Jupyter notebooks. These tools are designed to automate tasks and perform calculations efficiently.
 
 ## Tools
 ### 1. **Python Automatic File Sorter**
