@@ -338,7 +338,7 @@ Go back to PgAdmin, log in, and register a new server:
 - **Username**: `root`  
 - **Password**: `root`  
 
-Now, everything should work smoothly! 🎉 You can explore your database visually and even run queries using the built-in query tool.  
+Now, everything should work smoothly! 🎉 We can explore our database visually and even run queries using the built-in query tool.  
 
 📸 **Preview:**
 ![Data First 100 rows](../images/pgAdmin_first_connection.png)
