@@ -125,8 +125,6 @@ docker run -it test:pandas 2025-01-25 hello 37
 ```
 All arguments after the image name are passed to the script. 🎯
 
----
-
 ##### 🎉 **Summary** 🎉
 
 Docker is a **must-have tool** for data engineers. It ensures **reproducibility**, simplifies **local testing**, and streamlines **cloud deployment**. With Docker, you can run multiple pipelines and services in isolated environments, making your workflows more efficient and reliable. 🚀
@@ -230,7 +228,7 @@ You can also use [this notebook](./2_docker_sql/02-pg-test-connection.ipynb) to 
 
 ---
 
-### 🚀 3 - Connecting PgAdmin and PostgreSQL  
+### 3 - 🚀 Connecting PgAdmin and PostgreSQL 🐘
 
 Let's start by running our PostgreSQL database using the following command:  
 
@@ -345,7 +343,7 @@ Now, everything should work smoothly! 🎉 We can explore our database visually 
 
 ---
 
-### 🐳 4 - Dockerizing the Ingestion Script 🚀
+### 4 - 🐳 Dockerizing the Ingestion Script 🚀
 
 We started by using a [Jupyter Notebook](./2_docker_sql/01-upload-data.ipynb) to load data into our **Postgres database**. However, to create a more robust **data pipeline**, we converted the notebook into a Python script. Here's how we did it:
 
@@ -413,7 +411,7 @@ docker run taxi_ingest:v001 \
    --table_name=yellow_taxi_trips \
    --url=${URL_LINK}
 ```
-**Pro Tip:** If you forget to use the `-it` option for interactive mode, you can't stop the container with `Ctrl+C`. Instead, use `docker ps` to get the container ID and then stop it with `docker kill <container_id>`.
+**Pro Tip:** If you forget to use the `-it` option for interactive mode, you can't stop the container with `Ctrl+c`. Instead, use `docker ps` to get the container ID and then stop it with `docker kill <container_id>`.
 
 #### 🌐 Running in the Same Network
 To ensure the Docker container can communicate with the database, we ran it in the same network:
@@ -475,7 +473,7 @@ And that's it! 🎉 We successfully dockerized our ingestion script and optimize
 
 ---
 
-### 🐳 5 - Running Postgres and pgAdmin with Docker-Compose 🐘
+### 5 - 🐳 Running Postgres and pgAdmin with Docker-Compose 🐘
 
 Instead of running Postgres and pgAdmin separately using two different Docker commands, we can simplify the process by using a **Docker-Compose** configuration file. This allows us to run both services with minimal parameterization. If you're using **Docker Desktop**, `docker-compose` is already installed. If not, you can install it by following this [installation guide](https://docs.docker.com/compose/install/standalone/). 📥
 
@@ -507,7 +505,7 @@ docker-compose up
 ```
 - This command will create a network for the containers specified in the configuration file, and build and run those containers. 
 
-- To stop `docker-compose`, we press **Control+C**. However, to shut it down properly and remove the network and containers, we should use:
+- To stop `docker-compose`, we press `Ctrl+c`. However, to shut it down properly and remove the network and containers, we should use:
   ```bash
   docker-compose down
   ```
@@ -518,6 +516,20 @@ docker-compose up
     docker-compose up -d
     ```
   - This mode allows to regain control of the terminal after launching the containers. It makes it easier to shut down the services properly later. 🎯
+
+---
+
+### 6 - SQL Refresher
+
+
+
+
+
+
+
+
+
+
 
 
 ---
