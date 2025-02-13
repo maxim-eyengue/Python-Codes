@@ -1,4 +1,4 @@
-![ML Zoomcamp Illustration](../zoomcamp.jpg)
+![ML Zoomcamp Illustration](../files/zoomcamp.jpg)
 ---
 
 ## 📚 ML Zoomcamp Capstone 01 Project Reviews

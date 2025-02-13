@@ -1,6 +1,6 @@
 # Machine Learning Zoomcamp 2024
 
-<img src="zoomcamp.jpg" />
+<img src="files/zoomcamp.jpg" />
 
 I'm happy to share my progress completing the Machine Learning DataTalkClub Zoomcamp Certification.
 
@@ -25,13 +25,17 @@ Thanks to the course sponsors for making it possible to run this course
 
 <p align="center">
   <a href="https://saturncloud.io/">
-    <img height="120" src="https://github.com/DataTalksClub/llm-zoomcamp/raw/main/images/saturn-cloud.png">
+    <img height="120" src="files/saturn-cloud.png">
   </a>
 </p>
 
 
+## Machine Learning Zoomcamp 2024 Ranking
+I was among the Top 1% of 969 participants, with only 170 that were sucessfull.
+![2024 ML Zoomcamp Ranking](./files/Ranking_ML_Zoomcamp_2025.png)
+
 ## My Certificate of Completion
-![View my Certificate](./Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.jpg)
-[My Certificate File](./Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.pdf)
+![View my Certificate](./files/Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.jpg)
+[My Certificate File](./files/Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.pdf)
 
 ---

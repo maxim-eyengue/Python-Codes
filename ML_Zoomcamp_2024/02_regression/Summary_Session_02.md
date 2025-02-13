@@ -1,4 +1,4 @@
-![ML Zoomcamp Illustration](https://github.com/maxim-eyengue/Python-Codes/blob/main/ML_Zoomcamp_2024/zoomcamp.jpg)
+![ML Zoomcamp Illustration](../files/zoomcamp.jpg)
 ## 📚 Session 2 Summary - Machine Learning Zoomcamp
 
 ### 1. **🗺️ Project Overview: Car Price Prediction 🚗**  
