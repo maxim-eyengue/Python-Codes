@@ -29,6 +29,9 @@ Thanks to the course sponsors for making it possible to run this course
   </a>
 </p>
 
+
 ## My Certificate of Completion
-<embed src="./Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.pdf" width="100%" height="500px">
+![View my Certificate](./Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.jpg)
+[My Certificate File](./Maximilien_Certificate_e4fd3ace1a3811212342f8f4d8a4c72d0ac6863a.pdf)
+
 ---
