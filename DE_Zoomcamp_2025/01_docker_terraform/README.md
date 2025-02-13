@@ -473,5 +473,51 @@ This approach significantly reduced the download time. ⏩
 
 And that's it! 🎉 We successfully dockerized our ingestion script and optimized the data pipeline. 🚀
 
+---
+
+### 🐳 5 - Running Postgres and pgAdmin with Docker-Compose 🐘
+
+Instead of running Postgres and pgAdmin separately using two different Docker commands, we can simplify the process by using a **Docker-Compose** configuration file. This allows us to run both services with minimal parameterization. If you're using **Docker Desktop**, `docker-compose` is already installed. If not, you can install it by following this [installation guide](https://docs.docker.com/compose/install/standalone/). 📥
+
+Once installed, you can proceed to complete the [configuration file](./2_docker_sql/docker-compose.yaml). 🛠️
+
+**Pro Tip:** 💡 Using **Visual Studio Code** with the **Docker extension** can make this step even easier, as it provides helpful suggestions and auto-completion. 
+
+#### 📝 Key Notes:
+
+1. **Volume Mounting for Postgres:** 📂
+   - When mounting the volume `"./ny_taxi_postgres_data:/var/lib/postgresql/data:rw"` for your database, the `rw` mode stands for **read** and **write**. This allows you to access and modify the database as needed. 🔄
+
+2. **Persistent pgAdmin Configuration:** 🗂️
+   - To make pgAdmin's configuration persistent, create a folder named `data_pgadmin`. Then, change its permissions using the command:
+     ```bash
+     sudo chown 5050:5050 data_pgadmin
+     ```
+     - **What does this command do?** 🤔
+       - The `sudo chown 5050:5050 data_pgadmin` command changes the ownership of the `data_pgadmin` folder to the user and group with ID `5050`. This is necessary because pgAdmin runs under this specific user ID inside the container. By changing the ownership, you ensure that pgAdmin can read and write to this folder, making the configuration persistent across container restarts. 🔒
+
+   - After changing the permissions, mount this folder to `/var/lib/pgadmin` in your Docker-Compose configuration file.
+
+
+#### 🚀 Running Docker-Compose
+
+Once the configuration is ready, we can start the services by running:
+```bash
+docker-compose up
+```
+- This command will create a network for the containers specified in the configuration file, and build and run those containers. 
+
+- To stop `docker-compose`, we press **Control+C**. However, to shut it down properly and remove the network and containers, we should use:
+  ```bash
+  docker-compose down
+  ```
+
+- **Detached Mode:** 🕶️
+  - It is also possible to run `docker-compose` in detached mode:
+    ```bash
+    docker-compose up -d
+    ```
+  - This mode allows to regain control of the terminal after launching the containers. It makes it easier to shut down the services properly later. 🎯
+
 
 ---
