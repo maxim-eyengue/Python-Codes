@@ -447,13 +447,13 @@ If `ifconfig` is not installed, you can install it with:
 ```bash
 sudo apt-get install net-tools
 ```
-Look for the `inet` address (e.g., `172.28.199.42`). You can now access the dataset saved on your machine via:
+Look for the `inet` address (e.g., `100.91.130.08`). You can now access the dataset saved on your machine via:
 ```
 http://172.28.199.42:8000/yellow_tripdata_2021-01.csv.gz
 ```
 Here's how we ran the Docker container with the local dataset:
 ```bash
-URL_LINK="http://172.28.199.42:8000/yellow_tripdata_2021-01.csv.gz"
+URL_LINK="http://100.91.130.08:8000/yellow_tripdata_2021-01.csv.gz"
 docker run -it \
    --network=pg-network \
    taxi_ingest:v001 \
@@ -472,5 +472,6 @@ This approach significantly reduced the download time. ⏩
 - **Automation:** Instead of running Docker commands manually, consider using **Kubernetes jobs** for automation in production environments.
 
 And that's it! 🎉 We successfully dockerized our ingestion script and optimized the data pipeline. 🚀
+
 
 ---
