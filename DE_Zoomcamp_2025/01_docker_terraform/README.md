@@ -104,7 +104,7 @@ Now, every time you run this image, **pandas** will be available. 🐼
 
 #### 📂 **Adding a Data Pipeline** 📂
 
-Let's create a [Python script](./2_docker_sql/pipeline.py) (`pipeline.py`) and add it to our container. Update the Dockerfile:
+Let's create a [Python script](./2_docker_sql/pipeline.py) (`pipeline.py`) and add it to our container. Update the Dockerfile by adding:
 
 ```docker
 WORKDIR /app  # Set the working directory 📁
@@ -345,13 +345,132 @@ Now, everything should work smoothly! 🎉 We can explore our database visually 
 
 ---
 
-### 4 - Dockerizing the Ingestion script
+### 🐳 4 - Dockerizing the Ingestion Script 🚀
 
-We used a [notebook](./2_docker_sql/01-upload-data.ipynb) to load data into our postgres database. However, let's turn it into a script so we get a data pipeline. To convert our notebook to a script, we can use the command:
+We started by using a [Jupyter Notebook](./2_docker_sql/01-upload-data.ipynb) to load data into our **Postgres database**. However, to create a more robust **data pipeline**, we converted the notebook into a Python script. Here's how we did it:
+
+#### 📜 Converting Notebook to Script
+To convert the notebook into a script, we used the following command:
 ```bash
 jupyter nbconvert --to=script 01-upload-data.ipynb
 ```
-After renaming it, we can now prepare this [script](./2_docker_sql/ingest_data.py) to ingest data (take data and put it into a database).
+After renaming it, we prepared the [script](./2_docker_sql/ingest_data.py) to **ingest data** (i.e., take data and load it into the database).
 
+#### 🧪 Testing the Script
+To test the script, we first dropped the existing table in our **PGAdmin server**:
+```sql
+DROP TABLE yellow_taxi_data;
+```
+Then, when we tried to count the observations in the table:
+```sql
+SELECT COUNT(*) FROM yellow_taxi_data;
+```
+We got the error:
+```
+ERROR:  relation "yellow_taxi_data" does not exist
+LINE 1: SELECT COUNT(*) FROM yellow_taxi_data;
+```
+This error confirms that the table was successfully dropped.
+
+#### 🚀 Running the Ingestion Script
+To ingest the data, we ran the following command:
+```bash
+URL_LINK="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+python ingest_data.py \
+   --user=root \
+   --password=root \
+   --host=localhost \
+   --port=5432 \
+   --db=ny_taxi \
+   --table_name=yellow_taxi_trips \
+   --url=${URL_LINK}
+```
+**Pro Tip:** The command `$?` outputs the error code: `1` (or any non-zero value) for errors and `0` if the program finishes successfully. This is useful for debugging and ensuring your script runs as expected.
+
+**Note:** Passing passwords directly in the command line is not secure, as they can be accessed via terminal history. A better approach is to use **environment variables**.
+
+#### ✅ Verifying Data Ingestion
+After running the script, we verified the data was loaded successfully by running:
+```sql
+SELECT COUNT(*) FROM yellow_taxi_trips;
+```
+Everything worked smoothly! 🎉
+
+#### 🐳 Dockerizing the Script
+Next, we dockerized the ingestion script. We updated our [Dockerfile](./2_docker_sql/Dockerfile) and built the Docker image with:
+```bash
+docker build -t taxi_ingest:v001 .
+```
+Then, we ran the Docker container to ingest the data:
+```bash
+URL_LINK="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+docker run taxi_ingest:v001 \
+   --user=root \
+   --password=root \
+   --host=localhost \
+   --port=5432 \
+   --db=ny_taxi \
+   --table_name=yellow_taxi_trips \
+   --url=${URL_LINK}
+```
+**Pro Tip:** If you forget to use the `-it` option for interactive mode, you can't stop the container with `Ctrl+C`. Instead, use `docker ps` to get the container ID and then stop it with `docker kill <container_id>`.
+
+#### 🌐 Running in the Same Network
+To ensure the Docker container can communicate with the database, we ran it in the same network:
+```bash
+URL_LINK="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+docker run -it \
+   --network=pg-network \
+   taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=${URL_LINK}
+```
+**Note:** Specifying the network is crucial for local testing. In production, you'd use a real database URL in the cloud.
+
+#### 🚀 Speeding Up Data Download
+To speed up the data download, we hosted the dataset locally using a simple HTTP server:
+```bash
+python -m http.server
+```
+This command starts a simple HTTP server on your machine, allowing you to access files in the current directory via your browser at `localhost:8000`. 
+
+To get your machine's IP address, use:
+```bash
+ifconfig
+```
+If `ifconfig` is not installed, you can install it with:
+```bash
+sudo apt-get install net-tools
+```
+Look for the `inet` address (e.g., `172.28.199.42`). You can now access the dataset saved on your machine via:
+```
+http://172.28.199.42:8000/yellow_tripdata_2021-01.csv.gz
+```
+Here's how we ran the Docker container with the local dataset:
+```bash
+URL_LINK="http://172.28.199.42:8000/yellow_tripdata_2021-01.csv.gz"
+docker run -it \
+   --network=pg-network \
+   taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=${URL_LINK}
+```
+This approach significantly reduced the download time. ⏩
+
+#### 🎯 Final Thoughts
+- **Local Testing:** Using `pg-database` and local hosting is great for testing, but in production, you'd use cloud-based databases.
+- **Automation:** Instead of running Docker commands manually, consider using **Kubernetes jobs** for automation in production environments.
+
+And that's it! 🎉 We successfully dockerized our ingestion script and optimized the data pipeline. 🚀
 
 ---
