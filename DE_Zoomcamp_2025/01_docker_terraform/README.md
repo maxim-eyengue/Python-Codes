@@ -210,7 +210,9 @@ jupyter notebook
    - Describe the table: `\d yellow_taxi_data;`
 3. Load data into the table using the [upload-data notebook](./2_docker_sql/01-upload-data.ipynb) and verify with `pgcli`:
    ```sql
-   SELECT COUNT(*) FROM yellow_taxi_data;
+   Select Count(*)
+   From yellow_taxi_data
+   ;
    ```
 
 
@@ -251,8 +253,9 @@ pgcli -h localhost -p 5432 -u root -d ny_taxi
 To ensure our data is stored correctly, let's run a simple query: 
 
 ```sql
-SELECT MAX(tpep_pickup_datetime), MIN(tpep_pickup_datetime), MAX(total_amount)
-FROM yellow_taxi_data;
+Select MAX(tpep_pickup_datetime), MIN(tpep_pickup_datetime), MAX(total_amount)
+From yellow_taxi_data
+;
 ```
 
 #### 🎨 Why Use PgAdmin?  
@@ -361,7 +364,9 @@ DROP TABLE yellow_taxi_data;
 ```
 Then, when we tried to count the observations in the table:
 ```sql
-SELECT COUNT(*) FROM yellow_taxi_data;
+Select Count(*)
+From yellow_taxi_data
+;
 ```
 We got the error:
 ```
@@ -519,17 +524,190 @@ docker-compose up
 
 ---
 
-### 6 - SQL Refresher
+### 🗄️ 6 - SQL Refresher: Let's Dive into Queries! 🚀
+
+Let's do some queries to flex your SQL muscles 💪 For that, we will explore some key concepts using **Postgres** and **PgAdmin**! First, spin up your containers in detached mode with this command:
+```bash
+docker-compose up -d
+```
+**Access PgAdmin here:** 🌐 [http://localhost:8080/browser/](http://localhost:8080/browser/)  
+Connect to your `Docker Localhost` server and open the Query Tool! 🔥
 
 
+#### 🔍 Basic Exploration
+**Quick peek at the `zones` table:**
+```sql
+Select *
+From zones
+; -- Overview of taxi zones 🗺️
+```
 
+**First 100 taxi trips:**
+```sql
+SELECT * 
+FROM yellow_taxi_trips 
+LIMIT 100
+;  -- Let's see what's cooking! 🚖
+```
 
+#### 🤝 Introduction to Joins
+**Replace zone IDs with human-readable names:**  
+*Using implicit joins:*
+```sql
+Select tpep_pickup_datetime,
+       tpep_dropoff_datetime,
+	    total_amount,
+	    Concat(zpu."Borough",'/', zpu."Zone") "pickup_loc", -- 🎯 Pro tip: Alias columns!
+	    Concat(zdo."Borough",'/', zdo."Zone") "dropoff_loc"
+From yellow_taxi_trips t,
+     zones zpu,
+	  zones zdo
+Where t."PULocationID" = zpu."LocationID"
+  And t."DOLocationID" = zdo."LocationID"
+Limit 100
+;
+```
 
+*Modern explicit JOIN syntax (recommended ✅):*
+```sql
+Select tpep_pickup_datetime,
+       tpep_dropoff_datetime,
+	    total_amount,
+	    Concat(zpu."Borough",'/', zpu."Zone") "pickup_loc",
+	    Concat(zdo."Borough",'/', zdo."Zone") "dropoff_loc"
+From yellow_taxi_trips t
+Join zones zpu
+  On t."PULocationID" = zpu."LocationID"
+Join zones zdo
+  On t."DOLocationID" = zdo."LocationID"
+Limit 100
+;
+```
 
+#### 🕵️ Data Quality Checks
+**Find missing locations:** 
+Let's check if there are `NULL` values for locations in the `yellow_taxi_trips` table:
+```sql
+Select "PULocationID",
+       "DOLocationID"
+From yellow_taxi_trips
+Where "PULocationID" is Null
+   Or "DOLocationID" is Null
+;
+```
+Let's also check if there are any pickup or dropoff location in the trips table that is not present in the `zones` one:
+```sql
+Select "PULocationID", "DOLocationID"
+From yellow_taxi_trips
+Where "PULocationID" Not in (Select "LocationID"
+					         From zones)
+	   Or
+      "DOLocationID" Not in (Select "LocationID"
+					         From zones)
+Limit 137
+; -- Orphan locations check !
+```
 
+**Let's break things!** 💥 We will delete a zone and see the impact:
+```sql
+Delete From zones
+Where "LocationID" = 142 -- Bye-bye Lincoln Square East! 👋
+;
+```
+Now we can clearly get records from each time someone was picked or dropped at the location `142` (Manhattan Lincoln Square East) that we deleted.
+Note that, if we display all locations with the right names as done earlier with JOIN statements, we won't get the location `142`:
+```sql
+Select tpep_pickup_datetime,
+       tpep_dropoff_datetime,
+	    total_amount,
+	    Concat(zpu."Borough",'/', zpu."Zone") "pickup_loc",
+	    Concat(zdo."Borough",'/', zdo."Zone") "dropoff_loc"
+From yellow_taxi_trips t
+Join zones zpu
+     On t."PULocationID" = zpu."LocationID"
+Join zones zdo
+     On t."DOLocationID" = zdo."LocationID"
+Limit 100
+;
+```
 
+That is because `Join` in **SQL** is by default an `inner join`. Inner joins show only observations that are in both tables. To make sure we get all information fom the trips table, with null from others if any, we can use a left join, that keeps all records from the left table:
+```sql
+Select tpep_pickup_datetime,
+       tpep_dropoff_datetime,
+	    total_amount,
+	    Concat(zpu."Borough",'/', zpu."Zone") "pickup_loc",
+	    Concat(zdo."Borough",'/', zdo."Zone") "dropoff_loc"
+From yellow_taxi_trips t
+Left Join zones zpu
+     On t."PULocationID" = zpu."LocationID"
+Left Join zones zdo
+     On t."DOLocationID" = zdo."LocationID"
+Limit 100
+;  -- 🚩 Now shows NULL for deleted zones!
+```
+Note that there are also **right joins** to keep all records from the right table, and **outer joins** to get all records from both tables, as a combinaton of left and rigth joins. See the illustration below to get a simple undersanding of **SQL joins**.
+![Joins illustration](../images/joins.PNG)
 
+#### 📊 Aggregation Power Hour!
+Now, we will get some aggregates on the data using the `Group By` statement.
 
+**Daily trip analysis:**
+ Let's take a look at the number of trips for each day. To get days, we can either truncate the datetimes so to ignore times:
+```sql
+Select tpep_pickup_datetime,
+       tpep_dropoff_datetime,
+       DATE_TRUNC('DAY', tpep_dropoff_datetime),
+	    total_amount
+From yellow_taxi_trips
+;
+```
+Or cast datetimes as a dates, to get days that we can count:
+```sql
+Select Cast(tpep_dropoff_datetime as DATE) as "day", -- By day 📅
+	    Count(1)
+From yellow_taxi_trips
+Group by "day"
+Order by "day" ASC
+;
+```
+This allows us to get 37 observations for the moth of January. There are 6 outliers with some dates not from this month. Maybe the January taxi data was not well collected. We can also order the result by the count on each day:
+```sql
+Select Cast(tpep_dropoff_datetime as DATE),
+	    Count(1) "trip_count"
+From yellow_taxi_trips
+Group by Cast(tpep_dropoff_datetime as DATE)
+Order by "trip_count" DESC
+;
+```
+**More aggregate functions:**
+```sql
+Select Cast(tpep_dropoff_datetime as DATE) as "day",
+	    Count(1) "trip_count",
+       Max(total_amount) "max_bill", -- 💰 Show me the money!
+       Max(passenger_count) "max_passengers"
+From yellow_taxi_trips
+Group by "day"
+Order by "day" ASC
+;
+```
 
+**Multi-level grouping:**
+Finally, it is possible to group by indices of the output table columns, and to order by many columns:
+
+```sql
+Select Cast(tpep_dropoff_datetime as DATE) as "day",
+       "DOLocationID",
+	    Count(1) "trip_count",
+       Max(total_amount) "max_bill",,
+       AVG(total_amount) as "avg_fare"  -- ✨ New metric!
+       Max(passenger_count) "max_clients_1trip"
+From yellow_taxi_trips
+Group by 1, 2 -- 🎓 Group by output columns 1 (day) and 2 (location)
+Order by "day" asc, "DOLocationID" desc
+; -- Day + Dropoff Location Insights 📍
+```
+
+Now go query like a pro! 🏆✨
 
 ---
