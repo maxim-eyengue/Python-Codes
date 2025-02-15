@@ -100,6 +100,7 @@ docker build -t test:pandas .
 docker run -it test:pandas
 ```
 Now, every time you run this image, **pandas** will be available. 🐼
+You can check the list of Python installed libraries, with `pip list`.
 
 
 #### 📂 **Adding a Data Pipeline** 📂
@@ -169,6 +170,8 @@ If the `ny_taxi_postgres_data` folder appears empty after running the container:
    ```
    This ensures you can see the configuration files.
 
+**NB:**
+When ingesting data, if you encounter errors because of this folder permissions, you can also either decide to create a `data` folder and put the `ny_taxi_postgres_data` folder inside, or create a local volume instead: `docker volume create --name dtc_postgres_volume_local -d local`. The local volume `dtc_postgres_volume_local` would then be used to replaced our data volume as follows: `-v dtc_postgres_volume_local:/var/lib/postgresql/data`.
 
 #### 🔑 Accessing the Database with `pgcli`
 
@@ -215,6 +218,7 @@ jupyter notebook
    ;
    ```
 
+>>> **Remark:** For building a connection with Postgres databases, we had to install `psycopg`. On *Python 3.12*, we installed `psycopg-binary` and `psycopg2-binary`, and only `psycopg2` on *Python 3.9*.
 
 #### 🧪 Testing the Connection without pgcli
 
@@ -334,8 +338,9 @@ docker run -it \
 #### ✅ Final Steps  
 
 Go back to PgAdmin, log in, and register a new server:  
-- **Name**: `"Docker Localhost"`  
-- **Host**: `pg-database`  
+- **Name**: `Docker Localhost`  
+- **Host**: `pg-database`
+- **Maintenance database**: `ny_taxi`
 - **Username**: `root`  
 - **Password**: `root`  
 
@@ -490,6 +495,33 @@ Once installed, you can proceed to complete the [configuration file](./2_docker_
 
 1. **Volume Mounting for Postgres:** 📂
    - When mounting the volume `"./ny_taxi_postgres_data:/var/lib/postgresql/data:rw"` for your database, the `rw` mode stands for **read** and **write**. This allows you to access and modify the database as needed. 🔄
+   - If you created a **local docker volume** for mounting the database, you need to do small changes to **specify the right volume**, also indicating that it is **external**:
+
+   ```yaml
+   services:
+   pgdatabase:
+      image: postgres:13
+      environment:
+         - POSTGRES_USER=root
+         - POSTGRES_PASSWORD=root
+         - POSTGRES_DB=ny_taxi
+      volumes: 
+         - dtc_postgres_volume_local:/var/lib/postgresql/data:rw
+      ports:
+         - "5432:5432" # mapping local host port to container one
+   pgadmin:
+      image: dpage/pgadmin4
+      environment:
+         - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+         - PGADMIN_DEFAULT_PASSWORD=root
+      volumes:
+         - ./data_pgadmin:/var/lib/pgadmin
+      ports:
+         - "8080:80" # mapping local host port to container one
+   volumes:
+      dtc_postgres_volume_local:
+         external: true 
+   ```
 
 2. **Persistent pgAdmin Configuration:** 🗂️
    - To make pgAdmin's configuration persistent, create a folder named `data_pgadmin`. Then, change its permissions using the command:
@@ -709,5 +741,15 @@ Order by "day" asc, "DOLocationID" desc
 ```
 
 Now go query like a pro! 🏆✨
+
+---
+
+## Google Cloud Platform (GCP) & Terraform
+
+
+
+
+
+
 
 ---
