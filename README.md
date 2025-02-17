@@ -10,7 +10,7 @@ Welcome to my Python repository! This is a collection of **certifications**, **d
 Here's a breakdown of the folders and their contents:
 
 ### 1. **Data Engineering Zoomcamp 2025** 🛠️
-- **Description**: This folder contains my work and projects from the Data Engineering Zoomcamp 2025. It includes hands-on exercises, assignments, and projects related to data pipelines, ETL processes, and cloud data engineering.
+- **Description**: This folder contains my work from the Data Engineering Zoomcamp 2025. It includes course notes, hands-on exercises, assignments, and soon, a capstone project related to data pipelines, ETL processes, and cloud data engineering.
 - **Readme**: [DE_Zoomcamp_2025/README.md](https://github.com/maxim-eyengue/Python-Codes/blob/main/DE_Zoomcamp_2025/README.md)
 
 ---
@@ -22,7 +22,7 @@ Here's a breakdown of the folders and their contents:
 ---
 
 ### 3. **Machine Learning Zoomcamp 2024** 🤖
-- **Description**: This folder contains my progress and projects from the Machine Learning Zoomcamp 2024. It covers topics like supervised learning, unsupervised learning, model evaluation, and deployment.
+- **Description**: This folder contains my progress and projects from the Machine Learning Zoomcamp 2024. It covers topics like supervised learning, deep learning, model evaluation, and deployment.
 - **Readme**: [ML_Zoomcamp_2024/README.md](https://github.com/maxim-eyengue/Python-Codes/blob/main/ML_Zoomcamp_2024/README.md)
 
 ---
@@ -63,7 +63,7 @@ Here's a breakdown of the folders and their contents:
 ---
 
 ## 📜 License
-This repository is open-source and available under the [MIT License](LICENSE). Feel free to use, modify, and distribute the code as needed.
+This repository is open-source and available under the [MIT License](LICENSE). Feel free to use, modify, and distribute the code as needed. However, make sure to include the original [MIT License](LICENSE) specifying my name as author.
 
 ---
 
