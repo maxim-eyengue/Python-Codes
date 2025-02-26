@@ -2,7 +2,7 @@
 
 <img src="files/zoomcamp.jpg" />
 
-I'm happy to share my progress completing the Machine Learning DataTalkClub Zoomcamp Certification.
+I'm happy to share my progress completing the [Machine Learning DataTalkClub Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp) Certification.
 
 ### Syllabus 
 
