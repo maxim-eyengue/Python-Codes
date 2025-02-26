@@ -1,7 +1,7 @@
 # Data Engineering Zoomcamp 2025
 ![Data Engineering Illustration](./images/data-eng-illus.jpg)
 
-I am happy to share my progress with you as I complete the Data Engineering Zoomcamp Certification of the DataTalkClub.
+I am happy to share my progress with you as I complete the [Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp) Certification of the DataTalkClub.
 
 Syllabus
 
