@@ -16,7 +16,7 @@ Here's a breakdown of the folders and their contents:
 ---
 
 ### 2. **Diabetes Predictive Modelling Project** 🩺
-- **Description**: A machine learning project focused on predicting diabetes using patient data. This includes data preprocessing, model training, evaluation, and visualization.
+- **Description**: A machine learning project that focused on predicting diabetes using patient data. This includes data preprocessing, model training, evaluation, and visualization.
 - **Readme**: [Diabetes_Predictive_Modelling_Project/README.md](https://github.com/maxim-eyengue/Python-Codes/blob/main/Diabetes_Predictive_Modelling_Project/README.md)
 
 ---
